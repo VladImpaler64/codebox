@@ -1,34 +1,47 @@
 #root {
+  display: block;
+  max-height: 100%;
   margin: 0 auto;
-  padding: 1rem;
   box-sizing: border-box;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   display: flex;
   place-items: center;
   flex-flow: column;
+  touch-action: none;
+}
+
+.editor {
+  background-color: rgb(150, 230, 210);
+  width: 100%;
 }
 
 .textcode {
   tab-size: 4ch;
+  font-size: inherit;
+  font-family: inherit;
+  margin: 0 0 3px 0;
+  font-size: inherit;
   display: inline-block;
-  margin: 0 auto;
   padding: 0.5rem 1.5rem;
-  width: 80vw;
+  border-style: none;
+  width: 100%;
   resize: none;
-  min-width: 350px;
-  max-width: 600px;
-  height: 50vh;
+  outline: none;
+  height: 35vh;
 }
 
 .editor-numbers {
+  margin: 0 0 3px 0;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0.5rem 0;
   display: inline-block;
   background-color: #1f1f1f;
   resize: none;
-  padding: 0.5rem 0;
   text-align-last: center;
   width: 2rem;
-  height: calc(50vh + 2px);
+  height: 35vh;
   border-style: none;
   z-index: 4000;
   user-select: none;
@@ -46,27 +59,53 @@
   display: inline-block;
   margin: 0 auto;
   resize: none;
-  background-color: #112;
+  background-color: #fff;
   tab-size: 4;
   min-width: 40vw;
   min-height: 20vw;
   max-width: 100vw;
 }
 
+bot-info {
+  border-radius: 1.5rem;
+}
+
+.menu {
+  display: block;
+  position: absolute;
+  inset: calc(4vh + 3px) 100vw;
+  width: 45vw;
+  height: 80%;
+  background-color: #181425e5;
+  transition: all 0.3s ease-in-out;
+}
+
+.boton-menu {
+  height: 100%;
+  cursor: pointer;
+  user-select: none;
+  background-color: blue;
+  border-left: 2px solid #aa22bb;
+  padding: 0 0.5rem;
+  margin: 0 auto;
+  border-radius: 20px;
+}
+#menu-btn {
+  display: none;
+}
+
+#menu-btn:checked ~ .menu {
+  transform: translateX(calc(-45vw));
+}
+
 @media (max-width: 500px) {
 
   .textcode {
     padding: 0.5rem 0.2rem;
-    width: 80vw;
-    outline: none;
   }
 
   .editor-numbers {
-    padding: 0.5rem 0;
     width: 1.5rem;
-    border-style: none;
-    z-index: 4000;
-    user-select: none;
   }
 
   button {

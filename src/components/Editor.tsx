@@ -106,10 +106,10 @@ export function Editor() {
 // We return out component
 	return (
 	<>
-		<div style={{display: "flex", flexFlow: "row"}}>
+		<div className="editor" style={{display: "flex", flexFlow: "row"}}>
 			
 			<textarea className="editor-numbers" disabled datatype="number">1&#10;</textarea>
-			<textarea className="textcode" tabIndex={0} autoFocus onSelect={onSelectTextcode} onKeyDown={onKeydownTextcode} onChange={onChangeTextcode} onScroll={onScrollTextcode}></textarea>
+			<textarea className="textcode" tabIndex={1} onSelect={onSelectTextcode} onKeyDown={onKeydownTextcode} onChange={onChangeTextcode} onScroll={onScrollTextcode}></textarea>
 			<canvas id="myCanvas" hidden></canvas>
 		</div>
 
