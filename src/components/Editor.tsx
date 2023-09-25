@@ -85,9 +85,9 @@ export function Editor() {
 	}
 
 	function openPreview(e){
-					hljs.highlightAll();
-					let preview = document.querySelector(".bot-info");
-					preview.showModal();
+		hljs.highlightAll();
+		let preview = document.querySelector(".bot-info");
+		preview.showModal();
 	}
 
 /* Up until now previous functions were to handle editor settings and functionality, now the part to interact with Telegram as a backend */

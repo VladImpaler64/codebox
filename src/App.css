@@ -12,13 +12,14 @@
 }
 
 .editor {
-  background-color: rgb(150, 230, 210);
+  background-color: rgb(60, 230, 210);
   width: 100%;
 }
 
 .textcode {
   tab-size: 4ch;
   font-size: inherit;
+  background-color: #333;
   font-family: inherit;
   margin: 0 0 3px 0;
   font-size: inherit;
@@ -28,7 +29,8 @@
   width: 100%;
   resize: none;
   outline: none;
-  height: 35vh;
+  height: 55vh;
+  touch-action: none;
 }
 
 .editor-numbers {
@@ -41,9 +43,9 @@
   resize: none;
   text-align-last: center;
   width: 2rem;
-  height: 35vh;
+  height: 55vh;
   border-style: none;
-  z-index: 4000;
+  z-index: 3000;
   user-select: none;
   overflow-y: hidden;
 }
@@ -59,19 +61,26 @@
   display: inline-block;
   margin: 0 auto;
   resize: none;
-  background-color: #fff;
+  background-color: #262b44;
   tab-size: 4;
   min-width: 40vw;
   min-height: 20vw;
   max-width: 100vw;
 }
 
-bot-info {
-  border-radius: 1.5rem;
+.menu-container {
+  display: none;
+  position: absolute;
+  inset: calc(4vh + 3px) 0;
+  width: 100vw;
+  height: 80vh;
+  background-color: transparent;
+  z-index: 4000;
+  touch-action: none;
 }
 
 .menu {
-  display: block;
+  display: none;
   position: absolute;
   inset: calc(4vh + 3px) 100vw;
   width: 45vw;
@@ -95,7 +104,12 @@ bot-info {
 }
 
 #menu-btn:checked ~ .menu {
+  display: block;
   transform: translateX(calc(-45vw));
+}
+
+#menu-btn:checked ~ .menu-container {
+  display: block; 
 }
 
 @media (max-width: 500px) {

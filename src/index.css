@@ -7,18 +7,17 @@
 
   color-scheme: light dark;
   color: #96e6d2ff;
-  background-color: #3f3f3f;
 
   text-rendering: optimizeSpeed;
 }
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #4fffff;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  background-color: darkgrey;
 }
 
 html {
@@ -80,7 +79,6 @@ nav {
   list-style: none;
   justify-content: space-around;
   width: 100vw;
-  height: 4vh;
   align-items: center;
   border-top: 3px solid #aa22bd;
   overflow: scroll;
@@ -91,8 +89,8 @@ nav input[type="file"] {
   border-radius: 0 2rem 0 0;
   outline: none;
   font-weight: 600;
-  background-color: #463e58;
   height: 100%;
+  background-color: #463e58;
   user-select: none;
 }
 

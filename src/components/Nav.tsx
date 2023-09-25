@@ -23,9 +23,10 @@ export function Nav(){
 	const Telegram = window.Telegram.WebApp;
 	function clickX(e){
 		console.log(Telegram)
-		Telegram.showAlert("This is a test", (e)=>{
-			console.log(e)
+		Telegram.showAlert("This is a test", ()=>{
+			// All logic before closing web app can be done in this event
 		})
+
 	}
 
 	// Helper functions
