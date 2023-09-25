@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CODEBOX &#x1F913; - Mini app demo</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    
+    <!-- Telegram sdk for initializing the web app in client, must be the first script to load -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- All your project dependencies -->
+        <!-- For demo purpuse i'll be using hljs, a lib to highlight code 
+        https://highlightjs.org/ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+        <!-- And for making a "screenshot" of the code i'll be using html2canvas 
+        https://html2canvas.hertzen.com/ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
