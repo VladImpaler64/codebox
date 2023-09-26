@@ -25,7 +25,7 @@ export function Editor() {
 	}
 
 	function onChangeTextcode(e){
-		document.querySelector(".language-rust").innerHTML = e.target.value 
+		document.querySelector("#lang-hg").innerHTML = e.target.value 
 			switch (e.nativeEvent.inputType) {
 				case "insertLineBreak":
 					setLastChar(e.target.value.at(-1))
@@ -120,7 +120,7 @@ export function Editor() {
 			<button onClick={openPreview}>Preview</button>
 			<dialog className="bot-info">
 				<div className="preview">
-					<pre><code className="language-rust" ></code></pre>
+					<pre><code id="lang-hg" className="language-rust" ></code></pre>
 				</div>
 				<button onClick={(e)=>{ e.target.parentNode.close()}}>X</button>
 			</dialog>

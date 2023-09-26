@@ -1,10 +1,9 @@
-import { useState } from "react";
 import { Menu } from "./Menu";
-import { Telegram } from "telegraf";
 
 export function Nav(){
+
+//Event handlers for this component
 	function onSubmitInput(e){
-		console.log("click")
 		e.target.setAttribute("disabled", "");
 	}
 
@@ -20,11 +19,12 @@ export function Nav(){
 	}
 
 // Functionality with Telegram
-	const Telegram = window.Telegram.WebApp;
+	const webapp = window.Telegram.WebApp;
+
 	function clickX(e){
-		console.log(Telegram)
-		Telegram.showAlert("This is a test", ()=>{
-			// All logic before closing web app can be done in this event
+		webapp.showAlert(`Thanks ${window.Telegram.WebAppUser.first_name} for using my demo mini app`, ()=>{ // A Telegram build-in alert
+			// All logic after closing alert can be done in this event
+			webapp.close(); // In this case the button is made to close the mini app
 		})
 
 	}

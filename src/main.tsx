@@ -9,4 +9,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>,
 )
 
-// This is a simple react template all the components and functions are in component folder
+// This is a simple react template all the components and functions are in component folder, this will start the process of rendering our components

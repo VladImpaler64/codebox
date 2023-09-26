@@ -82,10 +82,16 @@
 .menu {
   display: none;
   position: absolute;
-  inset: calc(4vh + 3px) 100vw;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vh;
+  padding: 1rem 0.4rem 0 0;
+
+  inset: calc(4vh + 6px) 100vw;
   width: 45vw;
-  height: 80%;
+  height: 70%;
   background-color: #181425e5;
+  z-index: 5000;
   transition: all 0.3s ease-in-out;
 }
 
@@ -104,12 +110,25 @@
 }
 
 #menu-btn:checked ~ .menu {
-  display: block;
+  display: flex;
   transform: translateX(calc(-45vw));
 }
 
 #menu-btn:checked ~ .menu-container {
   display: block; 
+}
+
+.menu > input, select, p {
+  width: 60%;
+  max-width: 100px;
+}
+
+.donation {
+  width: 100%;
+  height: 50%;
+  position: sticky;
+
+  background-color: red;
 }
 
 @media (max-width: 500px) {
@@ -124,6 +143,15 @@
 
   button {
     padding: 0.3rem 0.8rem !important;
+  }
+
+  .menu {
+    min-width: 55vw;
+  }
+
+  #menu-btn:checked ~ .menu {
+    display: flex;
+    transform: translateX(calc(-55vw));
   }
   
 }
