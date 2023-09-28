@@ -18,10 +18,10 @@
 
 .textcode {
   tab-size: 4ch;
-  font-size: inherit;
   background-color: #333;
   font-family: inherit;
   margin: 0 0 3px 0;
+  color: #888;
   font-size: inherit;
   display: inline-block;
   padding: 0.5rem 1.5rem;
@@ -38,6 +38,7 @@
   font-size: inherit;
   font-family: inherit;
   padding: 0.5rem 0;
+  color: #888;
   display: inline-block;
   background-color: #1f1f1f;
   resize: none;
@@ -71,7 +72,7 @@
 .menu-container {
   display: none;
   position: absolute;
-  inset: calc(4vh + 3px) 0;
+  inset: calc(4vh + 5px) 0;
   width: 100vw;
   height: 80vh;
   background-color: transparent;
@@ -84,27 +85,31 @@
   position: absolute;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   gap: 2vh;
   padding: 1rem 0.4rem 0 0;
 
-  inset: calc(4vh + 6px) 100vw;
+  inset: 28px 100vw;
   width: 45vw;
   height: 70%;
+  min-height: 500px;
   background-color: #181425e5;
+  border-radius: 0 0 0 1rem;
   z-index: 5000;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in;
 }
 
 .boton-menu {
-  height: 100%;
   cursor: pointer;
+  height: 100%;
   user-select: none;
-  background-color: blue;
+  background-color: #0045ea;
   border-left: 2px solid #aa22bb;
   padding: 0 0.5rem;
   margin: 0 auto;
   border-radius: 20px;
 }
+
 #menu-btn {
   display: none;
 }
@@ -129,6 +134,7 @@
   position: sticky;
 
   background-color: red;
+  border-radius: 0 0 0 1rem;
 }
 
 @media (max-width: 500px) {

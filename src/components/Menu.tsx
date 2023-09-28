@@ -2,26 +2,32 @@ import { useState } from "react";
 import { Donation } from "./Donation.tsx"
 
 export function Menu(){
+	const [config, setConfig] = useState({color: "#888888", font_size: "2"});
+
 //Event Handlers
-	function onClickContainer(e){
-		document.querySelector("#menu-btn").checked = false;
+	function onClickContainer(){
+		(document.querySelector("#menu-btn") as HTMLInputElement).checked = false;
 	}
 
-	function onLangSelection(e){
-		let lang = e.target.value
+	function onLangSelection(e: React.ChangeEvent){
+		let lang = (e.target as HTMLInputElement).value
 		document.querySelector("#lang-hg")?.setAttribute("class", `${lang}`)
 	}
 
-	function onFontColor(e){
-		let color = e.target.value;
-		document.querySelector(".textcode")?.setAttribute("style", `color: ${color}`);
+	function onFontColor(e: React.ChangeEvent){
+		let color = (e.target as HTMLInputElement).value;
+		setConfig({color: color, font_size: config.font_size});
+		document.querySelector(".textcode")?.setAttribute("style", `color: ${color}; font-size: ${Number(config.font_size) / 2}rem;`);
+		document.querySelector(".editor-numbers")?.setAttribute("style", `color: ${color}; font-size: ${Number(config.font_size) / 2}rem;`);
 	}
 
-	function onFontSize(e){
-		let size = e.target.value > 0 ? e.target.value : null;
+	function onFontSize(e: React.ChangeEvent){
+		let fontsize = Number((e.target as HTMLInputElement).value)
+		let size = fontsize > 0 && fontsize <= 5 ? fontsize : null;
 		if (size){
-			document.querySelector(".textcode")?.setAttribute("style", `font-size: ${size / 2}rem`);
-			document.querySelector(".editor-numbers")?.setAttribute("style", `font-size: ${size / 2}rem`);
+			setConfig({color: config.color, font_size: String(fontsize)});
+			document.querySelector(".textcode")?.setAttribute("style", `color: ${config.color}; font-size: ${size / 2}rem`);
+			document.querySelector(".editor-numbers")?.setAttribute("style", `color: ${config.color}; font-size: ${size / 2}rem`);
 		}
 	}
 
@@ -36,12 +42,11 @@ export function Menu(){
 				<option value="" disabled>Select a lang</option>
 				<option value="language-rust">Rust</option>
 				<option value="language-javascript">Javascript</option>
-				<option value="language-c++">C/C++</option>
+				<option value="language-cpp">C/C++</option>
 				<option value="language-python">Python</option>
 				<option value="language-go">Go</option>
 				<option value="language-java">Java</option>
 				<option value="language-csharp">C# (Windows Java)</option>
-				<option value="language-html">Html</option>
 				<option value="language-sql">SQL</option>
 
 			</select>

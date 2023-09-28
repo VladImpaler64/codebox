@@ -1,58 +1,60 @@
+import React from "react";
 import { Menu } from "./Menu";
 
 export function Nav(){
 
 //Event handlers for this component
-	function onSubmitInput(e){
-		e.target.setAttribute("disabled", "");
+	function onSubmitInput(e: React.FormEvent){
+		(e.target as HTMLInputElement).setAttribute("disabled", "");
 	}
 
-	function onChangeInput(e){
-		let f = e.target.files
+	function onChangeInput(e: React.ChangeEvent){
+		let f =  (e.target as HTMLInputElement).files;
 		let buffer = document.querySelector(".textcode");
-		console.log(f)
 		let reader = new FileReader();
-		reader.onload = (e)=>{
-			buffer.value = reader.result;
+		reader.onload = ()=>{
+			(buffer as HTMLTextAreaElement).value = reader.result as string;
 		}
 		reader.readAsText(f[0])
 	}
 
 // Functionality with Telegram
 	const webapp = window.Telegram.WebApp;
+	// const user_info = Telegram.Utils.urlParseQueryString(Telegram.WebApp.initData);
 
-	function clickX(e){
-		webapp.showAlert(`Thanks ${window.Telegram.WebAppUser.first_name} for using my demo mini app`, ()=>{ // A Telegram build-in alert
+	function clickX(){
+		// let username = Telegram.Utils.urlParseQueryString(user_info.user)
+		webapp.showAlert(`Thanks for using my demo mini app`, ()=>{ // A Telegram build-in alert
 			// All logic after closing alert can be done in this event
-			webapp.close(); // In this case the button is made to close the mini app
 		})
+		webapp.close(); // In this case the button is made to close the mini app
 
 	}
 
 	// Helper functions
 	
-	function saveFile(e){
+	function saveFile(e: React.MouseEvent){
 		let buffer = document.querySelector(".textcode");
-		let input = document.querySelector(".file").files[0];
+		let input = (document.querySelector(".file") as HTMLInputElement).files[0];
 
 		if (input !== undefined){
 			let a = e.target;
-			let file = new Blob([buffer.value], {type: input.type});
-			a.href = URL.createObjectURL(file);
-			a.download = input.name;
+			let file = new Blob([(buffer as HTMLTextAreaElement).value], {type: input.type});
+			(a as HTMLAnchorElement).href = URL.createObjectURL(file);
+			(a as HTMLAnchorElement).download = input.name;
 		} else {
-			let info = prompt("Name of the file")
+			let info = prompt("Name of the file") || ""
 			let a = e.target;
-			let file = new Blob([buffer.value]);
-			a.href = URL.createObjectURL(file);
-			a.download = info;
+			let file = new Blob([(buffer as HTMLTextAreaElement).value]);
+			(a as HTMLAnchorElement).href = URL.createObjectURL(file);
+			(a as HTMLAnchorElement).download = info;
 		}
 	}
 
 	return (<>
 		<nav>
 			<input className="file" type="file" placeholder="File name: " autoFocus tabIndex={0} onSubmit={onSubmitInput} onChange={onChangeInput}></input>
-			<div>
+			<div className="menulist">
 				<a onClick={saveFile}>Save</a>
 				<input type="checkbox" id="menu-btn"></input>
 				<label className="boton-menu" htmlFor="menu-btn">Menu</label>

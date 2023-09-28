@@ -55,22 +55,10 @@ button {
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 
 nav {
@@ -79,6 +67,7 @@ nav {
   list-style: none;
   justify-content: space-around;
   width: 100vw;
+  height: 25px;
   align-items: center;
   border-top: 3px solid #aa22bd;
   overflow: scroll;
@@ -88,15 +77,15 @@ nav input[type="file"] {
   border-style: none;
   border-radius: 0 2rem 0 0;
   outline: none;
-  font-weight: 600;
   height: 100%;
+  font-weight: 600;
   background-color: #463e58;
   user-select: none;
 }
 
 nav a {
-  cursor: pointer;
   height: 100%;
+  cursor: pointer;
   user-select: none;
   background-color: #3f3f38;
   padding: 0 0.5rem;
@@ -105,6 +94,7 @@ nav a {
 }
 
 nav > div {
+  height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -113,13 +103,57 @@ nav > div {
 }
 
 nav li {
-  height: 100%;
   cursor: pointer;
+  height: 100%;
   user-select: none;
-  background-color: blue;
+  background-color: #0045ea;
   border-left: 2px solid #aa22bb;
   padding: 0 0.5rem;
   margin: 0 auto;
   border-radius: 20px;
 }
 
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #fff;
+  }
+
+  body {
+    background: #ccc;
+  }
+
+  .textcode {
+    background-color: #aaa;
+    color: #888;
+  }
+
+  .editor-numbers {
+    background-color: #555;
+    color: #888888;
+  }
+  
+  .language-rust {
+    background-color: #aaa;
+  }
+
+  .editor {
+    background-color: #3377ff;
+  }
+
+  a:hover {
+    background: #777; 
+  }
+
+  li:hover,label:hover {
+    background-color: #00a6ff;
+  }
+
+  button {
+    background: #0045ea;
+    color: white;
+  }
+
+  button:hover {
+    background-color: #0098ea;
+  }
+}
