@@ -98,7 +98,7 @@ export function Editor() {
 		let code = document.querySelector(".preview");
 		let textcode = document.querySelector(".textcode");
 
-		if(textcode.value.length !== 0) window.Telegram.WebApp.sendData(code?.innerHTML); // This method is used to send back any data, up to 4034 bytes to your but, this way you may have a "backend" to interact with users in the app after they used your min app
+		if(textcode.value.length !== 0) window.Telegram.WebApp.sendData(JSON.stringify({chat_id: `${Telegram.WebApp.initDataUnsafe.chat}`, code: `${code?.innerHTML}`})); // This method is used to send back any data, up to 4034 bytes to your but, this way you may have a "backend" to interact with users in the app after they used your min app
 
 	}
 

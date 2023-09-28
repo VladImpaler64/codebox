@@ -11,6 +11,7 @@ function App() { // We'll be rendering a two components
     <>
       <Nav />
       <Editor />
+      <Donation />
     </>
   )
 }

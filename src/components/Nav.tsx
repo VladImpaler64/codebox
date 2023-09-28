@@ -24,6 +24,13 @@ export function Nav(){
 
 	function clickX(){
 		// let username = Telegram.Utils.urlParseQueryString(user_info.user)
+		let data = (document.querySelector(".textcode") as HTMLTextAreaElement).value;
+		if (data.length > 0 && data.length <= 4096){
+			webapp.CloudStorage.setItem("buffer_data", data, (err, stored)=>{
+				console.log(err, stored)
+			});
+		}
+
 		webapp.showAlert(`Thanks for using my demo mini app`, ()=>{ // A Telegram build-in alert
 			// All logic after closing alert can be done in this event
 		})

@@ -50,7 +50,7 @@ export function Menu(){
 				<option value="language-sql">SQL</option>
 
 			</select>
-			<Donation />
+			<div className="github">Visit my github to review the code, get inspired and make a mini app yourself!<br /><a href="https://github.com/vladimpaler64" style={{borderRadius: "1rem"}}>https://github.com/vladimpaler64</a></div>
 		</div>	
 		<div className="menu-container" onClick={onClickContainer}></div>
 	</>);

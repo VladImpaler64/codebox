@@ -124,17 +124,39 @@
 }
 
 .menu > input, select, p {
-  width: 60%;
-  max-width: 100px;
+  width: 50%;
+  max-width: 80px;
+}
+
+.github {
+  width: 100%;
+  height: 25%;
+  position: sticky;
+
+  background-color: #25455376;
+  text-align: center;
+  overflow-y: scroll;
 }
 
 .donation {
   width: 100%;
-  height: 50%;
+  height: 25%;
   position: sticky;
 
-  background-color: red;
-  border-radius: 0 0 0 1rem;
+  background-color: #85341456;
+  text-align: center;
+  overflow-y: scroll;
+}
+
+.donation > p {
+  display: block;
+  margin: 0 auto;
+  background-color: blue;
+  width: 100vw;
+}
+
+.donation > span[id="contract"] {
+  background-color: #777
 }
 
 @media (max-width: 500px) {
