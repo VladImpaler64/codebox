@@ -10,15 +10,6 @@ document.addEventListener("DOMContentLoaded", (e)=>{ // After all the content of
   webapp.BackButton.show();
   webapp.enableClosingConfirmation();
 
-// CloudStorage is used for fetching previous buffer data, if the user exited the mini app with out making any action
-  let buffered;
-  try {
-    buffered = webapp.CloudStorage.getItem("buffer_data");
-  } catch(e){
-    buffered = "";
-  }
-  document.querySelector(".textcode").value = buffered;  // Styling the mini app with user theme colors
-
   console.log(webapp.colorScheme, webapp.themeParams); // We separete our styling in two main modes, light and dark
 
   // All event handlers for mini app

@@ -3,6 +3,7 @@ import { useState } from "react";
 export function Editor() { 
 	const [lineNumber, setLineNumber] = useState(1);
 	const [lastChar, setLastChar] = useState("");
+	const [cloudStorage, setCloudStorage] = useState(false);
 
 	/* EVENT HANDLER FUNCTIONS */
 
@@ -102,6 +103,23 @@ export function Editor() {
 
 	}
 
+	function defaultTextcodeValue(e){
+		if(cloudStorage) return; // Just one time we fetch the cloud storage
+		// CloudStorage is used for fetching previous buffer data, if the user exited the mini app with out making any action
+		setCloudStorage(true)
+		
+		const defaultValue = "// Change the language for highlight to work in the menu, also font size or color";
+		window.Telegram.WebApp.CloudStorage.getItem("buffer_data", (err, value)=>{
+			console.log(err, value)
+			if (err === null){
+				(e.target as HTMLTextAreaElement).value = value;  // Styling the mini app with user theme colors
+			} else {
+				(e.target as HTMLTextAreaElement).value = defaultValue;  // Styling the mini app with user theme colors
+			}
+		});
+
+	}
+
 
 // We return out component
 	return (
@@ -109,7 +127,7 @@ export function Editor() {
 		<div className="editor" style={{display: "flex", flexFlow: "row"}}>
 			
 			<textarea className="editor-numbers" disabled datatype="number">1&#10;</textarea>
-			<textarea className="textcode" tabIndex={1} onSelect={onSelectTextcode} onKeyDown={onKeydownTextcode} onChange={onChangeTextcode} onScroll={onScrollTextcode}></textarea>
+			<textarea className="textcode" tabIndex={1} onFocus={defaultTextcodeValue} onSelect={onSelectTextcode} onKeyDown={onKeydownTextcode} onChange={onChangeTextcode} onScroll={onScrollTextcode}></textarea>
 			<canvas id="myCanvas" hidden></canvas>
 		</div>
 

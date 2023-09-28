@@ -30,7 +30,6 @@ export function Nav(){
 				console.log(err, stored)
 			});
 		}
-
 		webapp.showAlert(`Thanks for using my demo mini app`, ()=>{ // A Telegram build-in alert
 			// All logic after closing alert can be done in this event
 		})
