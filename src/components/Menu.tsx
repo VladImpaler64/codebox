@@ -1,8 +1,7 @@
 import { useState } from "react";	
-import { Donation } from "./Donation.tsx"
 
 export function Menu(){
-	const [config, setConfig] = useState({color: "#888888", font_size: "2"});
+	const [config, setConfig] = useState({color: "#888888", font_size: "2", lang: "language-rust"});
 
 //Event Handlers
 	function onClickContainer(){
@@ -12,23 +11,27 @@ export function Menu(){
 	function onLangSelection(e: React.ChangeEvent){
 		let lang = (e.target as HTMLInputElement).value
 		document.querySelector("#lang-hg")?.setAttribute("class", `${lang}`)
+		setConfig({color: config.color, font_size: config.font_size, lang: lang})
+		Telegram.WebApp.CloudStorage.setItem("config", JSON.stringify(config))
 	}
 
 	function onFontColor(e: React.ChangeEvent){
 		let color = (e.target as HTMLInputElement).value;
-		setConfig({color: color, font_size: config.font_size});
+		setConfig({color: color, font_size: config.font_size, lang: config.lang});
 		document.querySelector(".textcode")?.setAttribute("style", `color: ${color}; font-size: ${Number(config.font_size) / 2}rem;`);
 		document.querySelector(".editor-numbers")?.setAttribute("style", `color: ${color}; font-size: ${Number(config.font_size) / 2}rem;`);
+		Telegram.WebApp.CloudStorage.setItem("config", JSON.stringify(config))
 	}
 
 	function onFontSize(e: React.ChangeEvent){
 		let fontsize = Number((e.target as HTMLInputElement).value)
 		let size = fontsize > 0 && fontsize <= 5 ? fontsize : null;
 		if (size){
-			setConfig({color: config.color, font_size: String(fontsize)});
+			setConfig({color: config.color, font_size: String(fontsize), lang: config.lang});
 			document.querySelector(".textcode")?.setAttribute("style", `color: ${config.color}; font-size: ${size / 2}rem`);
 			document.querySelector(".editor-numbers")?.setAttribute("style", `color: ${config.color}; font-size: ${size / 2}rem`);
 		}
+		Telegram.WebApp.CloudStorage.setItem("config", JSON.stringify(config))
 	}
 
 	return (<>

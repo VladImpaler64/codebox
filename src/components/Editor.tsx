@@ -1,32 +1,49 @@
 import { useState } from "react";
 
 export function Editor() { 
-	const [lineNumber, setLineNumber] = useState(1);
+	const [lineNumber, setLineNumber] = useState(3);
 	const [lastChar, setLastChar] = useState("");
-	const [cloudStorage, setCloudStorage] = useState(false);
+	const [remain, setRemain] = useState(0);
 
 	/* EVENT HANDLER FUNCTIONS */
 
-	function onSelectTextcode(e){
-		setLastChar(e.target.value.at(e.target.selectionStart - 1))
+	function onSelectTextcode(e: React.TransitionEvent<HTMLTextAreaElement>){
+		let target = e.target as HTMLTextAreaElement;
+		setLastChar(target.value.charAt(target.selectionStart - 1))
+
+		// Count new lines
+		if (e.nativeEvent.type === "mouseup"){
+
+			let text = target.value.slice(target.selectionStart, target.selectionEnd)
+			let count = 0;
+				for (const char of text){
+					if (char === '\n') {
+						count += 1;	
+					}
+				}
+			setRemain(count)
+		}
 	}
 
-	function onKeydownTextcode(e){
+	function onKeydownTextcode(e: React.KeyboardEvent){
 		if (e.key === "Tab") {
 			e.preventDefault();
-			let text = e.target.value;
-			let start = e.target.selectionStart
-				let sub = text.substring(0, e.target.selectionStart)
+			let target = e.target as HTMLTextAreaElement;
+			let text = target.value;
+			let start = target.selectionStart;
+				let sub = text.substring(0, target.selectionStart)
 				sub += "\t"
-				let sub2 = text.substring(e.target.selectionStart, text.length)
-				e.target.value = sub + sub2
-				e.target.selectionStart = e.target.selectionEnd = start + 1;
+				let sub2 = text.substring(target.selectionStart, text.length)
+				target.value = sub + sub2
+				target.selectionStart = target.selectionEnd = start + 1;
 
 		}
 	}
 
-	function onChangeTextcode(e){
-		document.querySelector("#lang-hg").innerHTML = e.target.value 
+	function onChangeTextcode(e: React.ChangeEvent){
+		// Insertions in .preview element
+		document.querySelector("#lang-hg").innerHTML = (e.target as HTMLTextAreaElement).value;
+
 			switch (e.nativeEvent.inputType) {
 				case "insertLineBreak":
 					setLastChar(e.target.value.at(-1))
@@ -41,7 +58,15 @@ export function Editor() {
 						}
 						document.querySelector(".editor-numbers").value = result;
 						setLastChar(e.target.value.at(-1))
-							setLineNumber(lineNumber - 1)
+						setLineNumber(lineNumber - 1)
+					} else if (remain > 0){
+						let result = "";
+						for(let i=0; i<lineNumber-remain; i++){
+							result+=`${i+1}\n`;
+						}
+						document.querySelector(".editor-numbers").value = result;
+						setLineNumber(lineNumber - remain)
+						setRemain(0)
 					} else {
 						setLastChar(e.target.value.at(-1))
 					}
@@ -96,38 +121,30 @@ export function Editor() {
 // Logic to pass info from your mini app to your bot
 
 	function sendBackToBot(e){ 
-		let code = document.querySelector(".preview");
-		let textcode = document.querySelector(".textcode");
+		let textcode = document.querySelector(".textcode") as HTMLTextAreaElement;
 
-		if(textcode.value.length !== 0) window.Telegram.WebApp.sendData(JSON.stringify({chat_id: `${Telegram.WebApp.initDataUnsafe.chat}`, code: `${code?.innerHTML}`})); // This method is used to send back any data, up to 4034 bytes to your but, this way you may have a "backend" to interact with users in the app after they used your min app
-
-	}
-
-	function defaultTextcodeValue(e){
-		if(cloudStorage) return; // Just one time we fetch the cloud storage
-		// CloudStorage is used for fetching previous buffer data, if the user exited the mini app with out making any action
-		setCloudStorage(true)
-		
-		const defaultValue = "// Change the language for highlight to work in the menu, also font size or color";
-		window.Telegram.WebApp.CloudStorage.getItem("buffer_data", (err, value)=>{
-			console.log(err, value)
-			if (err === null){
-				(e.target as HTMLTextAreaElement).value = value;  // Styling the mini app with user theme colors
-			} else {
-				(e.target as HTMLTextAreaElement).value = defaultValue;  // Styling the mini app with user theme colors
+		if(textcode.value.length !== 0) {
+			// If it is not supported we skip the error
+			try {
+				webapp.CloudStorage.setItem("buffer_data", textcode.value, (err, stored)=>{
+					console.log(err, stored)
+				});
+			} catch (err) {
+				;
 			}
-		});
+
+			window.Telegram.WebApp.switchInlineQuery(textcode.value); // This method is used to send back any data, up to 4096 bytes to your but, this way you may have a "backend" to interact with users in the app after they used your min app
+		}
 
 	}
-
 
 // We return out component
 	return (
 	<>
 		<div className="editor" style={{display: "flex", flexFlow: "row"}}>
 			
-			<textarea className="editor-numbers" disabled datatype="number">1&#10;</textarea>
-			<textarea className="textcode" tabIndex={1} onFocus={defaultTextcodeValue} onSelect={onSelectTextcode} onKeyDown={onKeydownTextcode} onChange={onChangeTextcode} onScroll={onScrollTextcode}></textarea>
+			<textarea className="editor-numbers" defaultValue={"1\n2\n3\n"} disabled datatype="number"></textarea>
+			<textarea className="textcode" defaultValue={"// Welcome to CODEBOX, this is my mini app example so you can write code more properly inside Telegram, and share it once you are done.\n// Settings can be found in menu, to change language for highlight, font size and color. Also if you exit without making any action, code will be saved in cloudStorage, max size is 4096 bytes, so be aware\n// Enojoy!"} tabIndex={1} onSelect={onSelectTextcode} onKeyDown={onKeydownTextcode} onChange={onChangeTextcode} onScroll={onScrollTextcode}></textarea>
 			<canvas id="myCanvas" hidden></canvas>
 		</div>
 

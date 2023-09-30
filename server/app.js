@@ -8,12 +8,18 @@ const bot = new Telegraf(process.env.BOT_TOKEN) // Using our bot token, read fro
 
 bot.start((ctx) => ctx.reply('supported commands: /editor')) // For this mini app only one command is needed to start the bot in a private mode
 
-bot.on(message("web_app_data"), async (ctx)=>{ // When we receive a message update containing web_app_data field, we interact with the client this way, it is a simple way but remember the client is closed after the call to Telegram.WebApp.sendData function (client side)
-  console.log(ctx.update)
-  let data = ctx.webAppData.data?.json(); // getting the information from the update message
+bot.on("message", async (ctx)=>{
+  // await ctx.reply("Cleaning...", Markup.removeKeyboard());
+  
+  console.log(ctx.update);
+  await ctx.deleteMessage(ctx.message.message_id);
+  await ctx.telegram.sendMessage(ctx.chat.id, `<pre><code>fn main</code></pre>`, {parse_mode: "HTML"}); // In my demo app this will send the code made with the client editor in the format of html to where the user opened the webapp
+})
 
-  // await ctx.sendMessage(`Thanks for using CODEBOX \u{1F913}, here is your code:`); // We make sure to await this message to be sent before continuing
-  await ctx.telegram.sendMessage(Number(data.chat_id), data.code, {parse_mode: "HTML"}); // In my demo app this will send the code made with the client editor in the format of html to where the user opened the webapp
+bot.on(message("web_app_data"), async (ctx)=>{ // When we receive a message update containing web_app_data field, we interact with the client this way, it is a simple way but remember the client is closed after the call to Telegram.WebApp.sendData function (client side)
+
+  await ctx.telegram.sendMessage(ctx.chat.id, `<pre><code>${ctx.message.web_app_data.data}</pre></code>`, {parse_mode: "HTML"}); // In my demo app this will send the code made with the client editor in the format of html to where the user opened the webapp
+
 });
 
 bot.command('editor', async (ctx) => {
@@ -25,17 +31,23 @@ bot.command('editor', async (ctx) => {
   }
 });
 
-// bot.on("message", async (ctx)=>{
-//   await ctx.reply("Cleaning...", Markup.removeKeyboard());
-//   console.log(ctx.update);
-// })
+// We show the user the default web app
+let article_id = 0;
+bot.on("inline_query", async (ctx)=>{
+  console.log(ctx.update.inline_query.query) 
+
+  if (ctx.update.inline_query.query === ''){
+    await ctx.answerInlineQuery([], {button: {text: "Try CODEBOX!, a mini app code editor.", web_app: {url: "https://amazing-gumption-7b140b.netlify.app/"}}});
+  }
+
+  // Work with the query input back from mini app (Telegram.WebApp.switchInlineQuery method) 
+  await ctx.answerInlineQuery([{type: "article", id: article_id, title: "Powered by Codebox", input_message_content: {message_text: `<pre><code>${ctx.update.inline_query.query}</code></pre>`, parse_mode: "HTML"}}]); 
+  article_id += 1;
+});
 
 bot.inlineQuery(["editor"], async (ctx)=>{
   /* When the user search for "editor" the bot will serve the web app, we could have other web apps to be served in any chat this way */
   switch (ctx.inlineQuery.query) {
-    // case '':
-    //   await ctx.answerInlineQuery([], {button: {text: "Try CODEBOX!, a mini app code editor.", web_app: {url: "https://amazing-gumption-7b140b.netlify.app/"}}});
-    //   break;
     case "editor":
       
       await ctx.answerInlineQuery([], {button: {text: "Try CODEBOX!, a mini app code editor.", web_app: {url: "https://amazing-gumption-7b140b.netlify.app/"}}});
