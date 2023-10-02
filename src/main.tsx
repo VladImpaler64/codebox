@@ -6,7 +6,7 @@ import './index.css'
 // This is a simple react template all the components and functions are in component folder, this will start the process of rendering our components
 
 // Once DOM is fully loaded we start making all web app function calls
-document.addEventListener("DOMContentLoaded", (e)=>{
+document.addEventListener("DOMContentLoaded", ()=>{
 
   let webapp = window.Telegram.WebApp; // For convinient calling the webapp interface
   webapp.expand(); // This method will spand the webapp, it's convinient if your webapp needs all the space available
@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", (e)=>{
 
 // Once all DOM is created we log in last code and config from cloudStorage
   window.Telegram.WebApp.CloudStorage.getItem("buffer_data", (err, value)=>{
-    console.log(err, value)
     if (err === null){
       (document.querySelector(".textcode") as HTMLTextAreaElement).value = value || "// To enable proper highlight go to menu and change the language, also font size and color. Enjoy!";
     }

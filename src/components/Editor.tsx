@@ -31,11 +31,11 @@ export function Editor() {
 			let target = e.target as HTMLTextAreaElement;
 			let text = target.value;
 			let start = target.selectionStart;
-				let sub = text.substring(0, target.selectionStart)
-				sub += "\t"
-				let sub2 = text.substring(target.selectionStart, text.length)
-				target.value = sub + sub2
-				target.selectionStart = target.selectionEnd = start + 1;
+			let sub = text.substring(0, target.selectionStart)
+			sub += "\t"
+			let sub2 = text.substring(target.selectionStart, text.length)
+			target.value = sub + sub2
+			target.selectionStart = target.selectionEnd = start + 1;
 
 		}
 	}
@@ -95,19 +95,32 @@ export function Editor() {
 	}
 
 	function captureTextarea() {
-		const element = document.querySelector('.preview');
+		
+		let code = document.querySelector("#lang-hg");
 
-		element.parentNode.showModal();
-		html2canvas(element).then(canvas => {
-				const image = canvas.toDataURL('image/png');
+		html2canvas(code).then(canvas => {
+			const image = canvas.toDataURL('image/png');
 
-				const link = document.createElement('a');
-				link.download = 'codebox-madeby@vladimpaler64.png';
-				link.href = image;
+			const link = document.createElement('a');
+			link.download = 'codebox-madeby@vladimpaler64.png';
+			link.href = image;
+			link.innerHTML = "Image ready!, click to download"
 
-				link.click();
-				element?.parentNode?.close();
-				});
+			let dialog = document.querySelector("dialog")
+			dialog?.appendChild(link)
+			link.addEventListener("click", ()=>{
+				dialog?.removeChild(link);
+			});
+		});
+	}
+
+	function exitDialog(e: MouseEvent){
+		console.log(e.target);
+		if (e.target === document.querySelector(".bot-info")){
+			e.target.close();
+			document.querySelector(".textcode").focus();
+		}
+		
 	}
 
 	function openPreview(e){
@@ -138,6 +151,28 @@ export function Editor() {
 
 	}
 
+	function insertTab(){
+		let target = document.querySelector(".textcode") as HTMLTextAreaElement;
+		let text = target.value;
+		let start = target.selectionStart;
+		let sub = text.substring(0, target.selectionStart)
+		sub += "\t"
+		let sub2 = text.substring(target.selectionStart, text.length)
+		target.value = sub + sub2
+		target.selectionStart = target.selectionEnd = start + 1;
+		target.focus();
+	}
+
+	function clearEditor(){
+		let textcode = document.querySelector(".textcode");
+		textcode.value = "";
+		(document.querySelector("#lang-hg") as HTMLElement).innerHTML = "";
+		document.querySelector(".editor-numbers").value = `1\n`;
+		setLastChar("")
+		setLineNumber(1)
+		textcode.focus();
+	}
+
 // We return out component
 	return (
 	<>
@@ -145,19 +180,21 @@ export function Editor() {
 			
 			<textarea className="editor-numbers" defaultValue={"1\n2\n3\n"} disabled datatype="number"></textarea>
 			<textarea className="textcode" defaultValue={"// Welcome to CODEBOX, this is my mini app example so you can write code more properly inside Telegram, and share it once you are done.\n// Settings can be found in menu, to change language for highlight, font size and color. Also if you exit without making any action, code will be saved in cloudStorage, max size is 4096 bytes, so be aware\n// Enojoy!"} tabIndex={1} onSelect={onSelectTextcode} onKeyDown={onKeydownTextcode} onChange={onChangeTextcode} onScroll={onScrollTextcode}></textarea>
-			<canvas id="myCanvas" hidden></canvas>
 		</div>
 
-		<div style={{width: "100vw", height: "10vh", display: "flex", flexFlow: "row", alignItems: "center", justifyContent: "center", gap: "0.4rem"}}>
-
-			<button onClick={captureTextarea}>Download png</button>
-			<button onClick={sendBackToBot}>Parse html</button>
-			<button onClick={openPreview}>Preview</button>
-			<dialog className="bot-info">
+		<div style={{width: "95vw", height: "10vh", display: "flex", flexFlow: "row", alignItems: "center", justifyContent: "space-between", gap: "0.4rem"}}>
+				<div style={{userSelect: "none", padding: "0.2rem 0.5rem", boxShadow: "1px 1px 0 1.5px #333", backgroundColor: "#555", borderRadius: "0.2rem"}} onClick={insertTab}>TAB</div>
+				<div style={{userSelect: "none", padding: "0.2rem 0.5rem", boxShadow: "1px 1px 0 1.5px #333", backgroundColor: "#555", borderRadius: "0.2rem"}} onClick={clearEditor}>Clear</div>
+				<button onClick={sendBackToBot}>Parse to HTML</button>
+				<button onClick={openPreview}>Highlight Preview</button>
+			<dialog onClick={exitDialog} className="bot-info">
 				<div className="preview">
 					<pre><code id="lang-hg" className="language-rust" ></code></pre>
 				</div>
-				<button onClick={(e)=>{ e.target.parentNode.close()}}>X</button>
+				<div style={{display: "flex", justifyContent: "space-around", flexDirection: "row"}}>
+					<button onClick={(e)=>{ e.target.parentNode.parentNode.close()}}>X</button>
+					<button onClick={captureTextarea}>Generate png</button>
+				</div>
 			</dialog>
 		</div>
 

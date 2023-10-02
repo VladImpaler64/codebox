@@ -1,14 +1,14 @@
 import { useState } from "react";
 
 export function Donation(){
-	const [count, setCount] = useState(0);
+	const [count, setCount] = useState(69);
 	return (
 	<>
 		<div className="donation">
-			<div>PLEASE SUPPORT MY JOB - DO NOT SEND REAL MONEY, JUST TESTNET</div>
+			<div>DONNATION CONTRACT EXAMPLE - DO NOT SEND REAL $TON <br /><span style={{color: "red"}}>---TESTNET MODE---</span></div>
 			Donation Contract Example<br />
 			<span id="contract">qoj87asdha9sfh9asdfhd</span><br />
-			<span>Donation count: {0}</span>
+			<span>Donation count: <b>{count}</b> $TON</span>
 		</div>
 	</>
 	);

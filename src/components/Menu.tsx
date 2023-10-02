@@ -26,12 +26,18 @@ export function Menu(){
 	function onFontSize(e: React.ChangeEvent){
 		let fontsize = Number((e.target as HTMLInputElement).value)
 		let size = fontsize > 0 && fontsize <= 5 ? fontsize : null;
+
 		if (size){
 			setConfig({color: config.color, font_size: String(fontsize), lang: config.lang});
 			document.querySelector(".textcode")?.setAttribute("style", `color: ${config.color}; font-size: ${size / 2}rem`);
 			document.querySelector(".editor-numbers")?.setAttribute("style", `color: ${config.color}; font-size: ${size / 2}rem`);
 		}
-		Telegram.WebApp.CloudStorage.setItem("config", JSON.stringify(config))
+
+		try { // If there is not a connected Telegram user this call will fail
+			Telegram.WebApp.CloudStorage.setItem("config", JSON.stringify(config))
+		} catch (err) {
+			;
+		}
 	}
 
 	return (<>
@@ -39,7 +45,7 @@ export function Menu(){
 			<label htmlFor="input-font_color">Font Color</label>
 			<input id="input-font_color" type="color" onChange={onFontColor}></input>
 			<label htmlFor="input-font_size">Font Size</label>
-			<input id="input-font_size" type="number" max={5} min={1} defaultValue={2} onChange={onFontSize}></input>
+			<input id="input-font_size" type="range" max={5} min={1} defaultValue={2} onChange={onFontSize}></input>
 			<p>Programming language</p>
 			<select name="languages" id="langs" onChange={onLangSelection}>
 				<option value="" disabled>Select a lang</option>
@@ -51,7 +57,6 @@ export function Menu(){
 				<option value="language-java">Java</option>
 				<option value="language-csharp">C# (Windows Java)</option>
 				<option value="language-sql">SQL</option>
-
 			</select>
 			<div className="github">Visit my github to review the code, get inspired and make a mini app yourself!<br /><a href="https://github.com/vladimpaler64" style={{borderRadius: "1rem"}}>https://github.com/vladimpaler64</a></div>
 		</div>	
