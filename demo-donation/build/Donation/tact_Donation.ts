@@ -321,23 +321,77 @@ function dictValueParserFactoryDeploy(): DictionaryValue<FactoryDeploy> {
     }
 }
 
+export type SendToncoin = {
+    $$type: 'SendToncoin';
+    amount: bigint;
+    address: Address;
+    payment: boolean;
+}
+
+export function storeSendToncoin(src: SendToncoin) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(704704673, 32);
+        b_0.storeCoins(src.amount);
+        b_0.storeAddress(src.address);
+        b_0.storeBit(src.payment);
+    };
+}
+
+export function loadSendToncoin(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 704704673) { throw Error('Invalid prefix'); }
+    let _amount = sc_0.loadCoins();
+    let _address = sc_0.loadAddress();
+    let _payment = sc_0.loadBit();
+    return { $$type: 'SendToncoin' as const, amount: _amount, address: _address, payment: _payment };
+}
+
+function loadTupleSendToncoin(source: TupleReader) {
+    let _amount = source.readBigNumber();
+    let _address = source.readAddress();
+    let _payment = source.readBoolean();
+    return { $$type: 'SendToncoin' as const, amount: _amount, address: _address, payment: _payment };
+}
+
+function storeTupleSendToncoin(source: SendToncoin) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.amount);
+    builder.writeAddress(source.address);
+    builder.writeBoolean(source.payment);
+    return builder.build();
+}
+
+function dictValueParserSendToncoin(): DictionaryValue<SendToncoin> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeSendToncoin(src)).endCell());
+        },
+        parse: (src) => {
+            return loadSendToncoin(src.loadRef().beginParse());
+        }
+    }
+}
+
  type Donation_init_args = {
     $$type: 'Donation_init_args';
+    owner: Address;
 }
 
 function initDonation_init_args(src: Donation_init_args) {
     return (builder: Builder) => {
         let b_0 = builder;
+        b_0.storeAddress(src.owner);
     };
 }
 
-async function Donation_init() {
-    const __code = Cell.fromBase64('te6ccgECDgEAAjwAART/APSkE/S88sgLAQIBYgIDApLQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxZ2zzy4IIwyPhDAcx/AcoAye1UBAUCAVgKCwE07UTQ1AH4Y9IAMJFt4Pgo1wsKgwm68uCJ2zwGAYoBkjB/4HAh10nCH5UwINcLH96CEJRqmLa6jqfTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gMHAHAAJtATptbSJus5lbIG7y0IBvIgGRMuIQJHADBIBCUCPbPAgByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsACQCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzACVu70YJwXOw9XSyuex6E7DnWSoUbZoJwndY1LStkfLMi068t/fFiOYJwIFXAG4BnY5TOWDquRyWyw4JwnZdOWrNOy3M6DpZtlGbopIAgFIDA0AEbCvu1E0NIAAYAB1sm7jQ1aXBmczovL1FtVE5pb2prSG81c2g1eWtrY3ptcjFuN2F0NDJxY3llYjdHdmI4Ymt3ZTduZXqCA=');
-    const __system = Cell.fromBase64('te6cckECEAEAAkYAAQHAAQEFoW71AgEU/wD0pBP0vPLICwMCAWIJBAIBWAgFAgFIBwYAdbJu40NWlwZnM6Ly9RbVROaW9qa0hvNXNoNXlra2N6bXIxbjdhdDQycWN5ZWI3R3ZiOGJrd2U3bmV6ggABGwr7tRNDSAAGAAlbu9GCcFzsPV0srnsehOw51kqFG2aCcJ3WNS0rZHyzItOvLf3xYjmCcCBVwBuAZ2OUzlg6rkclssOCcJ2XTlqzTstzOg6WbZRm6KSAKS0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8Wds88uCCMMj4QwHMfwHKAMntVA4KAYoBkjB/4HAh10nCH5UwINcLH96CEJRqmLa6jqfTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gMHALATptbSJus5lbIG7y0IBvIgGRMuIQJHADBIBCUCPbPAwByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsADQCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzAE07UTQ1AH4Y9IAMJFt4Pgo1wsKgwm68uCJ2zwPAAJtt4ELcA==');
+async function Donation_init(owner: Address) {
+    const __code = Cell.fromBase64('te6ccgECFwEABDEAART/APSkE/S88sgLAQIBYgIDAtbQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxa2zzy4ILI+EMBzH8BygBZWSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFgH6AsntVBEEAgFYDQ4DtO2i7fsBkjB/4HAh10nCH5UwINcLH94gghAqAPChuuMCIIIQlGqYtrqOqDDTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gwACRMOMNcAUGBwPUMNMfAYIQKgDwobry4IH6APpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gBVIGwT+EFvJBAjXwMlgRFNAscF8vQgwACPG48WgUyOUyO78vRyf4gkVSAUQzBtbds8oZFb4uMNfwgLCQE6bW0ibrOZWyBu8tCAbyIBkTLiECRwAwSAQlAj2zwLAGT5AYLw7WIGEWPxnkInBnXNObZk23TlrbtF7OsEcW8pI0G2Eou6m/hBbyQTXwOgf9sx4AAqAAAAAFBheW1lbnQgY29tcGxldGVkAjBbUwG8kjAg3nJ/iCVRNEEzFEMwbW3bPKEKCwAsAAAAAFdpdGhkcmF3IGNvbXBsZXRlZAHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wAMAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAgEgDxACAUgVFgIRttgbZ5tnjYQwERIAlbd6ME4LnYerpZXPY9CdhzrJUKNs0E4TusalpWyPlmRadeW/vixHME4ECrgDcAzscpnLB1XI5LZYcE4TsunLVmnZbmdB0s2yjN0UkAHA7UTQ1AH4Y9IAAY4l+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAH6AFlsEuD4KNcLCoMJuvLgifpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0ds8EwEIIHnbPBQAAnAA2iDBASHCTbHy0IbIIsEAmIAtAcsHAqMC3n9wbwAEjhsEeqkMIMAAUjCws5twM6YwFG+MBKQEA5Ew4gTkAbOXAoAub4wCpN6OEAN6qQymMBNvjAOkIsAAEDTmMyKlA5pTEm+BAcsHAqUC5GwhydAAEbCvu1E0NIAAYAB1sm7jQ1aXBmczovL1FtZUVmcldDOVZKSnl5dzFvOEZDTDVrN0dDMThjU2dnYnVjdGdudUxUOW9RYnqCA=');
+    const __system = Cell.fromBase64('te6cckECGQEABDsAAQHAAQEFoW71AgEU/wD0pBP0vPLICwMCAWINBAIBWAgFAgFIBwYAdbJu40NWlwZnM6Ly9RbWVFZnJXQzlWSkp5eXcxbzhGQ0w1azdHQzE4Y1NnZ2J1Y3RnbnVMVDlvUWJ6ggABGwr7tRNDSAAGACASAKCQCVt3owTgudh6ullc9j0J2HOslQo2zQThO6xqWlbI+WZFp15b++LEcwTgQKuANwDOxymcsHVcjktlhwThOy6ctWadluZ0HSzbKM3RSQAhG22Btnm2eNhDAXCwEIIHnbPAwA2iDBASHCTbHy0IbIIsEAmIAtAcsHAqMC3n9wbwAEjhsEeqkMIMAAUjCws5twM6YwFG+MBKQEA5Ew4gTkAbOXAoAub4wCpN6OEAN6qQymMBNvjAOkIsAAEDTmMyKlA5pTEm+BAcsHAqUC5GwhydAC1tAB0NMDAXGwowH6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIVFBTA28E+GEC+GLbPFrbPPLggsj4QwHMfwHKAFlZINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WAfoCye1UFw4DtO2i7fsBkjB/4HAh10nCH5UwINcLH94gghAqAPChuuMCIIIQlGqYtrqOqDDTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gwACRMOMNcBEQDwBk+QGC8O1iBhFj8Z5CJwZ1zTm2ZNt05a27RezrBHFvKSNBthKLupv4QW8kE18DoH/bMeABOm1tIm6zmVsgbvLQgG8iAZEy4hAkcAMEgEJQI9s8FAPUMNMfAYIQKgDwobry4IH6APpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgB0gBVIGwT+EFvJBAjXwMlgRFNAscF8vQgwACPG48WgUyOUyO78vRyf4gkVSAUQzBtbds8oZFb4uMNfxYUEgIwW1MBvJIwIN5yf4glUTRBMxRDMG1t2zyhExQALAAAAABXaXRoZHJhdyBjb21wbGV0ZWQByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsAFQCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzAAqAAAAAFBheW1lbnQgY29tcGxldGVkAcDtRNDUAfhj0gABjiX6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAfoAWWwS4Pgo1wsKgwm68uCJ+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAHR2zwYAAJwHO+toQ==');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
-    initDonation_init_args({ $$type: 'Donation_init_args' })(builder);
+    initDonation_init_args({ $$type: 'Donation_init_args', owner })(builder);
     const __data = builder.endCell();
     return { code: __code, data: __data };
 }
@@ -367,6 +421,8 @@ const Donation_errors: { [key: number]: { message: string } } = {
     135: { message: `Code of a contract was not found` },
     136: { message: `Invalid address` },
     137: { message: `Masterchain support is not enabled for this contract` },
+    4429: { message: `Invalid sender` },
+    19598: { message: `Invalid payment` },
 }
 
 const Donation_types: ABIType[] = [
@@ -376,23 +432,27 @@ const Donation_types: ABIType[] = [
     {"name":"Deploy","header":2490013878,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"DeployOk","header":2952335191,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"FactoryDeploy","header":1829761339,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"cashback","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"SendToncoin","header":704704673,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}},{"name":"address","type":{"kind":"simple","type":"address","optional":false}},{"name":"payment","type":{"kind":"simple","type":"bool","optional":false}}]},
 ]
 
 const Donation_getters: ABIGetter[] = [
+    {"name":"balance","arguments":[],"returnType":{"kind":"simple","type":"string","optional":false}},
 ]
 
 const Donation_receivers: ABIReceiver[] = [
+    {"receiver":"internal","message":{"kind":"text","text":"donation"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"SendToncoin"}},
     {"receiver":"internal","message":{"kind":"typed","type":"Deploy"}},
 ]
 
 export class Donation implements Contract {
     
-    static async init() {
-        return await Donation_init();
+    static async init(owner: Address) {
+        return await Donation_init(owner);
     }
     
-    static async fromInit() {
-        const init = await Donation_init();
+    static async fromInit(owner: Address) {
+        const init = await Donation_init(owner);
         const address = contractAddress(0, init);
         return new Donation(address, init);
     }
@@ -415,9 +475,15 @@ export class Donation implements Contract {
         this.init = init;
     }
     
-    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: Deploy) {
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: 'donation' | SendToncoin | Deploy) {
         
         let body: Cell | null = null;
+        if (message === 'donation') {
+            body = beginCell().storeUint(0, 32).storeStringTail(message).endCell();
+        }
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'SendToncoin') {
+            body = beginCell().store(storeSendToncoin(message)).endCell();
+        }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'Deploy') {
             body = beginCell().store(storeDeploy(message)).endCell();
         }
@@ -425,6 +491,13 @@ export class Donation implements Contract {
         
         await provider.internal(via, { ...args, body: body });
         
+    }
+    
+    async getBalance(provider: ContractProvider) {
+        let builder = new TupleBuilder();
+        let source = (await provider.get('balance', builder.build())).stack;
+        let result = source.readString();
+        return result;
     }
     
 }

@@ -1,24 +1,38 @@
 PROGRAM{
   DECLPROC __tact_verify_address
+  DECLPROC __tact_load_address
   DECLPROC __tact_store_address
   DECLPROC __tact_my_balance
   DECLPROC __tact_not_null
   DECLPROC __tact_context_get
   DECLPROC __tact_context_get_sender
   DECLPROC __tact_store_bool
+  DECLPROC __tact_slice_eq_bits
+  DECLPROC __tact_float_to_string
   DECLPROC $Deploy$_load
   DECLPROC $DeployOk$_store
   DECLPROC $DeployOk$_store_cell
+  DECLPROC $SendToncoin$_load
+  DECLPROC $Donation$_store
+  DECLPROC $Donation$_load
   DECLPROC $StateInit$_not_null
+  DECLPROC $Context$_get_value
+  DECLPROC $Donation$init$_load
   DECLPROC $Donation$_contract_init
   DECLPROC $Donation$_contract_load
   DECLPROC $Donation$_contract_store
   DECLPROC $global_send
+  DECLPROC $Int$_fun_toCoinsString
+  DECLPROC $Donation$_fun_balance
   DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
   DECLPROC $Donation$_fun_forward
   DECLPROC $Donation$_fun_notify
+  DECLPROC $SendParameters$_constructor_to_value_mode_bounce_body
   DECLPROC $DeployOk$_constructor_queryId
+  DECLPROC $Donation$_internal_text_ed62061163f19e42270675cd39b664db74e5adbb45eceb04716f292341b6128b
+  DECLPROC $Donation$_internal_binary_SendToncoin
   DECLPROC $Donation$_internal_binary_Deploy
+  104128 DECLMETHOD %balance
   113617 DECLMETHOD supported_interfaces
   121275 DECLMETHOD get_abi_ipfs
   115390 DECLMETHOD lazy_deployment_completed
@@ -44,6 +58,11 @@ PROGRAM{
     EQUAL
     136 THROWIFNOT
   }>
+  __tact_load_address PROCINLINE:<{
+    LDMSGADDR
+    SWAP
+    __tact_verify_address INLINECALLDICT
+  }>
   __tact_store_address PROCINLINE:<{
     __tact_verify_address INLINECALLDICT
     STSLICER
@@ -68,6 +87,94 @@ PROGRAM{
     SWAP
     1 STI
   }>
+  __tact_slice_eq_bits PROCINLINE:<{
+    SDEQ
+  }>
+  __tact_float_to_string PROCREF:<{
+    DUP
+    1 LESSINT
+    OVER
+    77 GTINT
+    OR
+    134 THROWIF
+    NEWC
+    s2 PUSH
+    0 LESSINT
+    IF:<{
+      45 PUSHINT
+      SWAP
+      8 STU
+      s0 s2 XCHG
+      NEGATE
+      s0 s2 XCHG
+    }>
+    TRUE
+    0 PUSHINT
+    NIL
+    s0 s4 XCHG
+    REPEAT:<{
+      s0 s4 XCHG
+      10 PUSHINT
+      DIVMOD
+      DUP
+      0 EQINT
+      s3 s(-1) PUXC
+      AND
+      NOT
+      IF:<{
+        FALSE
+        s3 POP
+        48 ADDCONST
+        s1 s4 XCHG
+        TPUSH
+        s0 s4 XCHG
+        INC
+        s0 s4 XCHG
+        s0 s3 XCHG
+      }>ELSE<{
+        DROP
+      }>
+      s0 s4 XCHG
+    }>
+    SWAP
+    NOT
+    IF:<{
+      s0 s2 XCHG
+      46 PUSHINT
+      TPUSH
+      s0 s2 XCHG
+      INC
+    }>
+    UNTIL:<{
+      s0 s3 XCHG
+      10 PUSHINT
+      DIVMOD
+      48 ADDCONST
+      s1 s3 XCHG
+      TPUSH
+      s0 s3 XCHG
+      INC
+      s2 PUSH
+      0 EQINT
+      s3 s4 XCHG
+    }>
+    s3 POP
+    s2 PUSH
+    DEC
+    s0 s3 XCHG
+    REPEAT:<{
+      s1 s2 PUSH2
+      INDEXVAR
+      SWAP
+      8 STU
+      s0 s2 XCHG
+      DEC
+      s0 s2 XCHG
+    }>
+    2 1 BLKDROP2
+    ENDC
+    CTOS
+  }>
   $Deploy$_load PROCINLINE:<{
     32 LDU
     SWAP
@@ -89,14 +196,45 @@ PROGRAM{
     $DeployOk$_store INLINECALLDICT
     ENDC
   }>
+  $SendToncoin$_load PROCINLINE:<{
+    32 LDU
+    SWAP
+    704704673 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    LDGRAMS
+    __tact_load_address INLINECALLDICT
+    SWAP
+    1 LDI
+    3 -ROLL
+  }>
+  $Donation$_store PROCINLINE:<{
+    -ROT
+    __tact_store_address INLINECALLDICT
+    SWAP
+    STGRAMS
+  }>
+  $Donation$_load PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+    SWAP
+    LDGRAMS
+    -ROT
+  }>
   $StateInit$_not_null PROCINLINE:<{
     DUP
     ISNULL
     128 THROWIF
     2 UNTUPLE
   }>
+  $Context$_get_value PROCINLINE:<{
+    s1 s3 XCHG
+    3 BLKDROP
+  }>
+  $Donation$init$_load PROCINLINE:<{
+    __tact_load_address INLINECALLDICT
+  }>
   $Donation$_contract_init PROCREF:<{
-    PUSHNULL
+    0 PUSHINT
   }>
   $Donation$_contract_load PROCREF:<{
     c4 PUSH
@@ -105,19 +243,22 @@ PROGRAM{
     SWAP
     __tact_context_sys SETGLOB
     1 LDI
-    DROP
+    SWAP
     IFJMP:<{
-      PUSHNULL
+      $Donation$_load INLINECALLDICT
+      1 2 BLKDROP2
     }>
     MYADDR
     11 PLDU
     10 PUSHPOW2
     EQUAL
     137 THROWIFNOT
+    $Donation$init$_load INLINECALLDICT
+    SWAP
+    ENDS
     $Donation$_contract_init INLINECALLDICT
   }>
   $Donation$_contract_store PROCINLINE:<{
-    DROP
     NEWC
     __tact_context_sys GETGLOB
     SWAP
@@ -125,6 +266,8 @@ PROGRAM{
     TRUE
     SWAP
     1 STI
+    -ROT
+    $Donation$_store INLINECALLDICT
     ENDC
     c4 POP
   }>
@@ -230,6 +373,14 @@ PROGRAM{
     SWAP
     SENDRAWMSG
   }>
+  $Int$_fun_toCoinsString PROCINLINE:<{
+    9 PUSHINT
+    __tact_float_to_string INLINECALLDICT
+  }>
+  $Donation$_fun_balance PROCREF:<{
+    DUP
+    $Int$_fun_toCoinsString INLINECALLDICT
+  }>
   $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
   }>
   $Donation$_fun_forward PROCREF:<{
@@ -261,12 +412,75 @@ PROGRAM{
     PUSHNULL
     $Donation$_fun_forward INLINECALLDICT
   }>
+  $SendParameters$_constructor_to_value_mode_bounce_body PROCINLINE:<{
+    s1 s4 XCHG
+    s3 s3 s0 XCHG3
+    PUSHNULL
+    PUSHNULL
+  }>
   $DeployOk$_constructor_queryId PROCINLINE:<{
+  }>
+  $Donation$_internal_text_ed62061163f19e42270675cd39b664db74e5adbb45eceb04716f292341b6128b PROCINLINE:<{
+    __tact_context_get INLINECALLDICT
+    $Context$_get_value INLINECALLDICT
+    ADD
+  }>
+  $Donation$_internal_binary_SendToncoin PROCINLINE:<{
+    __tact_context_get INLINECALLDICT
+    s2 s3 XCHG
+    3 BLKDROP
+    s5 PUSH
+    4429 PUSHINT
+    s0 s2 XCHG
+    __tact_slice_eq_bits INLINECALLDICT
+    THROWANYIFNOT
+    DUP
+    0 EQINT
+    IF:<{
+      2DROP
+      s0 s1 PUSH2
+      GREATER
+      IF:<{
+        DROP
+        DUP
+      }>
+      2 PUSHINT
+      TRUE
+      B{b5ee9c7241010101001800002c00000000576974686472617720636f6d706c65746564190fd038} B>boc PUSHREF
+      s5 PUSH
+      s3 s4 XCPU
+      s1 s3 s3 XCHG3
+      $SendParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
+      $global_send INLINECALLDICT
+      SUB
+    }>ELSE<{
+      IF:<{
+        19598 PUSHINT
+        s2 s3 PUSH2
+        LEQ
+        THROWANYIFNOT
+        2 PUSHINT
+        TRUE
+        B{b5ee9c7241010101001700002a000000005061796d656e7420636f6d706c65746564e80c9adc} B>boc PUSHREF
+        s4 PUSH
+        3 -ROLL
+        $SendParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
+        $global_send INLINECALLDICT
+        SUB
+      }>ELSE<{
+        2DROP
+      }>
+    }>
   }>
   $Donation$_internal_binary_Deploy PROCINLINE:<{
     $DeployOk$_constructor_queryId INLINECALLDICT
     $DeployOk$_store_cell INLINECALLDICT
     $Donation$_fun_notify INLINECALLDICT
+  }>
+  %balance PROC:<{
+    $Donation$_contract_load INLINECALLDICT
+    $Donation$_fun_balance INLINECALLDICT
+    2 1 BLKDROP2
   }>
   supported_interfaces PROC:<{
     123515602279859691144772641439386770278 PUSHINT
@@ -275,7 +489,7 @@ PROGRAM{
     209474421377847335869795010607481022628 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d544e696f6a6b486f35736835796b6b637a6d72316e376174343271637965623747766238626b7765376e657a} PUSHSLICE
+    x{697066733a2f2f516d65456672574339564a4a797977316f3846434c356b37474331386353676762756374676e754c54396f51627a} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -284,6 +498,8 @@ PROGRAM{
     SWAP
   }>
   $Donation$_contract_router_internal PROCREF:<{
+    c2 SAVE
+    SAMEALTSAVE
     SWAP
     IFJMP:<{
       DROP
@@ -298,15 +514,39 @@ PROGRAM{
       DUP
       32 PLDU
     }>
+    DUP
+    704704673 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      $SendToncoin$_load INLINECALLDICT
+      1 3 BLKDROP2
+      $Donation$_internal_binary_SendToncoin INLINECALLDICT
+      TRUE
+    }>
+    DUP
     2490013878 PUSHINT
     EQUAL
     IFJMP:<{
+      DROP
       $Deploy$_load INLINECALLDICT
       NIP
       $Donation$_internal_binary_Deploy INLINECALLDICT
       TRUE
     }>
-    DROP
+    0 EQINT
+    IF:<{
+      HASHSU
+      107371338005904902629942957819302272364873480733299193346743780085868818469515 PUSHINT
+      EQUAL
+      IFJMP:<{
+        $Donation$_internal_text_ed62061163f19e42270675cd39b664db74e5adbb45eceb04716f292341b6128b INLINECALLDICT
+        TRUE
+        RETALT
+      }>
+    }>ELSE<{
+      DROP
+    }>
     FALSE
   }>
   recv_internal PROC:<{
@@ -328,7 +568,7 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $Donation$_contract_load INLINECALLDICT
-    -ROT
+    2SWAP
     $Donation$_contract_router_internal INLINECALLDICT
     130 THROWIFNOT
     $Donation$_contract_store INLINECALLDICT

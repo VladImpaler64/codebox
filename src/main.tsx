@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import { TonConnectUIProvider } from "@tonconnect/ui-react"; // This will help us to connect to TON blockchain with ton connect protocol, it's very handy
+const manifest = "https://raw.githubusercontent.com/ton-community/tutorials/main/03-client/test/public/tonconnect-manifest.json";
 
 // This is a simple react template all the components and functions are in component folder, this will start the process of rendering our components
 
@@ -40,8 +42,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <TonConnectUIProvider manifestUrl={manifest}>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </TonConnectUIProvider>,
 )
 

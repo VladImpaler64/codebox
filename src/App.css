@@ -29,7 +29,7 @@
   width: 100%;
   resize: none;
   outline: none;
-  height: 55vh;
+  height: 50vh;
   touch-action: none;
 }
 
@@ -44,7 +44,7 @@
   resize: none;
   text-align-last: center;
   width: 2rem;
-  height: 55vh;
+  height: 50vh;
   border-style: none;
   z-index: 3000;
   user-select: none;
@@ -155,7 +155,6 @@
 
 .donation {
   width: 100%;
-  height: 25%;
   touch-action: none;
   position: sticky;
 
@@ -185,7 +184,8 @@
   }
 
   button {
-    padding: 0.2rem 0.4rem !important;
+    padding: 0.1rem 0.4rem !important;
+    font-size: 1rem;
   }
 
   .menu {

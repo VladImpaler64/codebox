@@ -10,12 +10,26 @@
 }
 
 ;;
+;; Type: Context
+;; TLB: _ bounced:bool sender:address value:int257 raw:^slice = Context
+;;
+
+_ $Context$_get_value((int, slice, int, slice) v) inline {
+    var (v'bounced, v'sender, v'value, v'raw) = v;
+    return v'value;
+}
+
+;;
 ;; Type: SendParameters
 ;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
 ;;
 
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline {
     return (bounce, to, value, mode, body, code, data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_body(slice to, int value, int mode, int bounce, cell body) inline {
+    return (bounce, to, value, mode, body, null(), null());
 }
 
 ;;
@@ -52,25 +66,60 @@ cell $DeployOk$_store_cell((int) v) inline {
 }
 
 ;;
+;; Type: SendToncoin
+;; Header: 0x2a00f0a1
+;; TLB: send_toncoin#2a00f0a1 amount:coins address:address payment:bool = SendToncoin
+;;
+
+(slice, ((int, slice, int))) $SendToncoin$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 704704673);
+    var v'amount = sc_0~load_coins();
+    var v'address = sc_0~__tact_load_address();
+    var v'payment = sc_0~load_int(1);
+    return (sc_0, (v'amount, v'address, v'payment));
+}
+
+;;
 ;; Type: Donation
 ;;
 
-tuple $Donation$_contract_load() impure inline_ref {
+builder $Donation$_store(builder build_0, (slice, int) v) inline {
+    var (v'owner, v'balance) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = build_0.store_coins(v'balance);
+    return build_0;
+}
+
+(slice, ((slice, int))) $Donation$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'balance = sc_0~load_coins();
+    return (sc_0, (v'owner, v'balance));
+}
+
+(slice, ((slice))) $Donation$init$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    return (sc_0, (v'owner));
+}
+
+(slice, int) $Donation$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
     if ($loaded) {
-        return null();
+        return $sc~$Donation$_load();
     } else {
         ;; Allow only workchain deployments
         throw_unless(137, my_address().preload_uint(11) == 1024);
-        return $Donation$_contract_init();
+        (slice owner) = $sc~$Donation$init$_load();
+        $sc.end_parse();
+        return $Donation$_contract_init(owner);
     }
 }
 
-() $Donation$_contract_store(tuple v) impure inline {
+() $Donation$_contract_store((slice, int) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);
+    b = $Donation$_store(b, v);
     set_data(b.end_cell());
 }

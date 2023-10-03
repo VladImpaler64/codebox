@@ -4,31 +4,71 @@
 
 #include "tact_Donation.headers.fc";
 #include "tact_Donation.stdlib.fc";
+#include "tact_Donation.constants.fc";
 #include "tact_Donation.storage.fc";
 
 ;;
 ;; Contract Donation functions
 ;;
 
-tuple $Donation$_contract_init() impure inline_ref {
-    tuple $self = null();
-    return $self;
+(slice, int) $Donation$_contract_init(slice $owner) impure inline_ref {
+    var (($self'owner, $self'balance)) = (null(), null());
+    $self'owner = $owner;
+    $self'balance = 0;
+    return ($self'owner, $self'balance);
+}
+
+((slice, int), slice) $Donation$_fun_balance((slice, int) $self) impure inline_ref {
+    var (($self'owner, $self'balance)) = $self;
+    return (($self'owner, $self'balance), $Int$_fun_toCoinsString($self'balance));
 }
 
 ;;
 ;; Receivers of a Contract Donation
 ;;
 
-((tuple), ()) $Donation$_internal_binary_Deploy(tuple $self, (int) $deploy) impure inline {
-    var $self = $self;
+((slice, int), ()) $Donation$_internal_text_ed62061163f19e42270675cd39b664db74e5adbb45eceb04716f292341b6128b((slice, int) $self) impure inline {
+    var ($self'owner, $self'balance) = $self;
+    $self'balance = ($self'balance + $Context$_get_value(__tact_context_get()));
+    return (($self'owner, $self'balance), ());
+}
+
+(((slice, int)), ()) $Donation$_internal_binary_SendToncoin((slice, int) $self, (int, slice, int) $msg) impure inline {
+    var ($self'owner, $self'balance) = $self;
+    var ($msg'amount, $msg'address, $msg'payment) = $msg;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    throw_unless(4429, ( __tact_slice_eq_bits($self'owner, $ctx'sender) ));
+    if (($msg'payment == false)) {
+        int $value = $msg'amount;
+        if (($value > $self'balance)) {
+            $value = $self'balance;
+        }
+        $global_send($SendParameters$_constructor_to_value_mode_bounce_body($self'owner, $value, 2, true, __gen_cell_comment_f7b1ab6077945b37370a1550574675180cf87df4cb047c869746812a83667d4c()));
+        $self'balance = ($self'balance - $value);
+    } elseif ($msg'payment) {
+        throw_unless(19598, ($msg'amount <= $self'balance));
+        $global_send($SendParameters$_constructor_to_value_mode_bounce_body($msg'address, $msg'amount, 2, true, __gen_cell_comment_4deca8beab8fe5f78f5c193d728d1e09a8a4c953cdfa8550511b59493eba39d3()));
+        $self'balance = ($self'balance - $msg'amount);
+    }
+    return (($self'owner, $self'balance), ());
+}
+
+(((slice, int)), ()) $Donation$_internal_binary_Deploy((slice, int) $self, (int) $deploy) impure inline {
+    var ($self'owner, $self'balance) = $self;
     var ($deploy'queryId) = $deploy;
-    $self~$Donation$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
-    return ($self, ());
+    ($self'owner, $self'balance)~$Donation$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'owner, $self'balance), ());
 }
 
 ;;
 ;; Get methods of a Contract Donation
 ;;
+
+_ %balance() method_id(104128) {
+    var self = $Donation$_contract_load();
+    var res = self~$Donation$_fun_balance();
+    return res;
+}
 
 _ supported_interfaces() method_id {
     return (
@@ -40,7 +80,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmTNiojkHo5sh5ykkczmr1n7at42qcyeb7Gvb8bkwe7nez";
+    return "ipfs://QmeEfrWC9VJJyyw1o8FCL5k7GC18cSggbuctgnuLT9oQbz";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -51,7 +91,7 @@ _ lazy_deployment_completed() method_id {
 ;; Routing of a Contract Donation
 ;;
 
-(tuple, int) $Donation$_contract_router_internal(tuple self, int msg_bounced, slice in_msg) impure inline_ref {
+((slice, int), int) $Donation$_contract_router_internal((slice, int) self, int msg_bounced, slice in_msg) impure inline_ref {
     ;; Handle bounced messages
     if (msg_bounced) {
         return (self, true);
@@ -64,11 +104,29 @@ _ lazy_deployment_completed() method_id {
     }
     
     
+    ;; Receive SendToncoin message
+    if (op == 704704673) {
+        var msg = in_msg~$SendToncoin$_load();
+        self~$Donation$_internal_binary_SendToncoin(msg);
+        return (self, true);
+    }
+    
     ;; Receive Deploy message
     if (op == 2490013878) {
         var msg = in_msg~$Deploy$_load();
         self~$Donation$_internal_binary_Deploy(msg);
         return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "donation" message
+        if (text_op == 0xed62061163f19e42270675cd39b664db74e5adbb45eceb04716f292341b6128b) {
+            self~$Donation$_internal_text_ed62061163f19e42270675cd39b664db74e5adbb45eceb04716f292341b6128b();
+            return (self, true);
+        }
     }
     
     return (self, false);

@@ -183,10 +183,14 @@ export function Editor() {
 		</div>
 
 		<div style={{width: "95vw", height: "10vh", display: "flex", flexFlow: "row", alignItems: "center", justifyContent: "space-between", gap: "0.4rem"}}>
-				<div style={{userSelect: "none", padding: "0.2rem 0.5rem", boxShadow: "1px 1px 0 1.5px #333", backgroundColor: "#555", borderRadius: "0.2rem"}} onClick={insertTab}>TAB</div>
-				<div style={{userSelect: "none", padding: "0.2rem 0.5rem", boxShadow: "1px 1px 0 1.5px #333", backgroundColor: "#555", borderRadius: "0.2rem"}} onClick={clearEditor}>Clear</div>
-				<button onClick={sendBackToBot}>Parse to HTML</button>
-				<button onClick={openPreview}>Highlight Preview</button>
+				<div style={{display: "flex", gap: "2px"}}>
+					<div style={{userSelect: "none", padding: "0.2rem 0.5rem", boxShadow: "1px 1px 0 1.5px #333", backgroundColor: "#555", borderRadius: "0.2rem"}} onClick={insertTab}>TAB</div>
+					<div style={{userSelect: "none", padding: "0.2rem 0.5rem", boxShadow: "1px 1px 0 1.5px #333", backgroundColor: "#555", borderRadius: "0.2rem"}} onClick={clearEditor}>Clear</div>
+				</div>
+				<div style={{display: "flex", gap: "2px"}}>
+					<button onClick={openPreview}>Highlight Preview</button>
+					<button onClick={sendBackToBot}>Parse HTML</button>
+				</div>
 			<dialog onClick={exitDialog} className="bot-info">
 				<div className="preview">
 					<pre><code id="lang-hg" className="language-rust" ></code></pre>

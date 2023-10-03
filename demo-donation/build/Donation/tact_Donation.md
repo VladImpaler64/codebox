@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: Donation
-BOC Size: 584 bytes
+BOC Size: 1085 bytes
 
 # Types
-Total Types: 6
+Total Types: 7
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -29,8 +29,14 @@ Signature: `DeployOk{queryId:uint64}`
 TLB: `factory_deploy#6d0ff13b queryId:uint64 cashback:address = FactoryDeploy`
 Signature: `FactoryDeploy{queryId:uint64,cashback:address}`
 
+## SendToncoin
+TLB: `send_toncoin#2a00f0a1 amount:coins address:address payment:bool = SendToncoin`
+Signature: `SendToncoin{amount:coins,address:address,payment:bool}`
+
 # Get Methods
-Total Get Methods: 0
+Total Get Methods: 1
+
+## balance
 
 # Error Codes
 2: Stack undeflow
@@ -57,3 +63,5 @@ Total Get Methods: 0
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
+4429: Invalid sender
+19598: Invalid payment

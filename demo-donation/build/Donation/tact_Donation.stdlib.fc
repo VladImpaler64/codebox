@@ -11,6 +11,11 @@ slice __tact_verify_address(slice address) inline {
     return address;
 }
 
+(slice, slice) __tact_load_address(slice cs) inline {
+    slice raw = cs~load_msg_addr();
+    return (cs, __tact_verify_address(raw));
+}
+
 builder __tact_store_address(builder b, slice address) inline {
     return b.store_slice(__tact_verify_address(address));
 }
@@ -35,7 +40,59 @@ builder __tact_store_bool(builder b, int v) inline {
     return b.store_int(v, 1);
 }
 
+int __tact_slice_eq_bits(slice a, slice b) inline {
+    return equal_slice_bits(a, b);
+}
+
 forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm "2 UNTUPLE";
+
+slice __tact_float_to_string(int src, int digits) inline_ref {
+    throw_if(134, (digits <= 0) | (digits > 77));
+    builder b = begin_cell();
+    
+    if (src < 0) {
+        b = b.store_uint(45, 8);
+        src = - src;
+    }
+    
+    ;; Process rem part
+    int skip = true;
+    int len = 0;
+    int rem = 0;
+    tuple t = empty_tuple();
+    repeat(digits) {
+        (src, rem) = src.divmod(10);
+        if ( ~ ( skip & ( rem == 0 ) ) ) {
+            skip = false;
+            t~tpush(rem + 48);
+            len = len + 1;
+        }
+    }
+    
+    ;; Process dot
+    if (~ skip) {
+        t~tpush(46);
+        len = len + 1;
+    }
+    
+    ;; Main
+    do {
+        (src, rem) = src.divmod(10);
+        t~tpush(rem + 48);
+        len = len + 1;
+    } until (src == 0);
+    
+    ;; Assemble
+    int c = len - 1;
+    repeat(len) {
+        int v = t.at(c);
+        b = b.store_uint(v, 8);
+        c = c - 1;
+    }
+    
+    ;; Result
+    return b.end_cell().begin_parse();
+}
 
 () $global_send((int, slice, int, int, cell, cell, cell) $params) impure inline_ref {
     var (($params'bounce, $params'to, $params'value, $params'mode, $params'body, $params'code, $params'data)) = $params;
@@ -80,8 +137,13 @@ forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm "2 UNTUPLE";
     send_raw_message($c, $params'mode);
 }
 
-(tuple, ()) $Donation$_fun_forward(tuple $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
+slice $Int$_fun_toCoinsString(int $self) impure inline {
     var ($self) = $self;
+    return __tact_float_to_string($self, 9);
+}
+
+((slice, int), ()) $Donation$_fun_forward((slice, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
+    var (($self'owner, $self'balance)) = $self;
     var ($init) = $init;
     cell $code = null();
     cell $data = null();
@@ -97,15 +159,15 @@ forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm "2 UNTUPLE";
         if (($balanceBeforeMessage < 0)) {
             raw_reserve(0, 0);
             $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, (128 + 2), $body, $code, $data));
-            return ($self, ());
+            return (($self'owner, $self'balance), ());
         }
     }
     $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, (64 + 2), $body, $code, $data));
-    return ($self, ());
+    return (($self'owner, $self'balance), ());
 }
 
-(tuple, ()) $Donation$_fun_notify(tuple $self, cell $body) impure inline {
-    var ($self) = $self;
-    $self~$Donation$_fun_forward(__tact_context_get_sender(), $body, false, null());
-    return ($self, ());
+((slice, int), ()) $Donation$_fun_notify((slice, int) $self, cell $body) impure inline {
+    var (($self'owner, $self'balance)) = $self;
+    ($self'owner, $self'balance)~$Donation$_fun_forward(__tact_context_get_sender(), $body, false, null());
+    return (($self'owner, $self'balance), ());
 }
