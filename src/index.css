@@ -70,7 +70,7 @@ nav {
   width: 100vw;
   height: 25px;
   align-items: center;
-  border-top: 3px solid #f522bd;
+  border-top: 3px solid #f533aa;
   overflow: hidden;
 }
 
@@ -106,9 +106,10 @@ nav > div {
 nav li {
   cursor: pointer;
   height: 100%;
+  color: #311;
   user-select: none;
-  background-color: #d5029d;
-  padding: 0 0.5rem;
+  background-color: #f533aa;
+  padding: 0 0.2rem 0 0.4rem;
   margin: 0 auto;
   border-radius: 0 0 0 1rem;
 }

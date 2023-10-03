@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import { TonConnectUIProvider } from "@tonconnect/ui-react"; // This will help us to connect to TON blockchain with ton connect protocol, it's very handy
-const manifest = "https://raw.githubusercontent.com/ton-community/tutorials/main/03-client/test/public/tonconnect-manifest.json";
+const manifest = "https://raw.githubusercontent.com/ton-community/tutorials/main/03-client/test/public/tonconnect-manifest.json"; // Manifest must public, it is a description on your contract for it to appear in the ton connect protocol, I'll be using the example manifest
 
 // This is a simple react template all the components and functions are in component folder, this will start the process of rendering our components
 

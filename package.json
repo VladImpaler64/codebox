@@ -11,11 +11,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@orbs-network/ton-access": "^2.3.3",
     "@tonconnect/ui-react": "^2.0.0-beta.2",
     "dotenv": "^16.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "telegraf": "^4.14.0"
+    "telegraf": "^4.14.0",
+    "ton": "^13.6.1",
+    "ton-core": "^0.52.0",
+    "ton-crypto": "^3.2.0",
+    "vite-plugin-node-polyfills": "^0.15.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

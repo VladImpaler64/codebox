@@ -1,15 +1,24 @@
-import { useState } from "react";
-import { TonConnectButton } from '@tonconnect/ui-react';
+import { CHAIN, TonConnectButton } from '@tonconnect/ui-react';
+import { useTonConnect } from "../hooks/useTonConnect";
+import { useDonationContract } from "../hooks/useDonationContract";
 
 export function Donation(){
-	const [count, setCount] = useState(69);
+	const {network, connected} = useTonConnect();
+	const {donationAddress, balance, sendTon} = useDonationContract();
+
+	function sendDonation(){ // Interaction with the toncoin throught useTonConnect, orbs provider
+	 	let toncoin = document.querySelector("#toncoin") as HTMLInputElement;
+		console.log(`sent ${toncoin.value}`)
+		sendTon(toncoin.value as string);
+	}
+
 	return (
 	<>
 		<div className="donation">
-			<div><div style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "1rem", padding: "0 0.5rem"}}>DONNATION CONTRACT EXAMPLE - DO NOT SEND REAL $TON<TonConnectButton /></div><span style={{color: "red", display: "flex", flexDirection: "row", gap: "1rem", alignItems: "center", justifyContent: "center"}}>---TESTNET MODE---</span></div>
-			Donation Contract Example<br />
-			<span id="contract">qoj87ajdfa9uhfa9fhsdha9sfh9asdfhd</span><br />
-			<span>Donation count: <b>{count}</b> $TON</span>
+			<div><div style={{display: "flex", fontSize: "1.2rem", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "1rem", padding: "0 0.5rem"}}>SUPPORT MY WORK! &#128513;<TonConnectButton /></div><span style={{color: "red", display: "flex", flexDirection: "row", gap: "1rem", alignItems: "center", justifyContent: "center"}}>-- {network ? network === CHAIN.TESTNET ? "Testnet mode" : "\u{26a0} CHANGE TO TESTNET MODE \u{26a0}" : "Disconnected"} --</span></div>Donation Contract Address (TESTNET)<br />
+			<span id="contract">{donationAddress ? donationAddress : "..."}</span><br />
+			<span>Donation count: <b>{balance ? balance : "..."}</b> $TON</span><br />
+			{connected ? <div style={{display: "flex", justifyContent: "center", gap: "4px", alignItems: "center"}}>$<input id="toncoin" style={{width: "3rem"}} type="number" defaultValue={0.5} min={0.2} step={0.1}></input><button style={{width: "5rem"}} onClick={sendDonation}>Donate</button></div> : null}
 		</div>
 	</>
 	);
