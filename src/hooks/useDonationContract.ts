@@ -26,7 +26,7 @@ export function useDonationContract() {
             setBalance(null)
             const balance = await donationContract.getBalance();
             setBalance(balance)
-            await sleep(30000)
+            await sleep(10000)
             getBalance()
         }
 
