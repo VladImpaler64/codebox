@@ -14,6 +14,16 @@ export function Nav(){
 		let reader = new FileReader();
 		reader.onload = ()=>{
 			(buffer as HTMLTextAreaElement).value = reader.result as string;
+			// Insert number of lines
+			let i = 1, total = "";
+			for (let letter of reader.result as string) {
+				if (letter === '\n') {
+					total += `${i}\n`;
+					i += 1;
+				}
+			}
+
+			document.querySelector(".editor-numbers").value = total;
 		}
 		reader.readAsText(f[0])
 	}
@@ -30,6 +40,21 @@ export function Nav(){
 				console.log(err, stored)
 			});
 		}
+
+		try {
+
+			let color = (document.querySelector("#input-font_color") as HTMLInputElement).value;
+			let font = (document.querySelector("#input-font_size") as HTMLInputElement).value;
+			let lang = (document.querySelector("#langs") as HTMLInputElement).value;
+
+			let data = JSON.stringify({color: color, font_size: font, lang: lang});
+			webapp.CloudStorage.setItem("config", data, (err, stored)=>{
+				console.log(err, stored)
+			});
+		} catch (err) {
+			;
+		}
+
 		webapp.showAlert(`Thanks for using my demo mini app`, ()=>{ // A Telegram build-in alert
 			// All logic after closing alert can be done in this event
 		})
@@ -37,31 +62,10 @@ export function Nav(){
 
 	}
 
-	// Helper functions
-	
-	function saveFile(e: React.MouseEvent){
-		let buffer = document.querySelector(".textcode");
-		let input = (document.querySelector(".file") as HTMLInputElement).files[0];
-
-		if (input !== undefined){
-			let a = e.target;
-			let file = new Blob([(buffer as HTMLTextAreaElement).value], {type: input.type});
-			(a as HTMLAnchorElement).href = URL.createObjectURL(file);
-			(a as HTMLAnchorElement).download = input.name;
-		} else {
-			let info = prompt("Name of the file") || ""
-			let a = e.target;
-			let file = new Blob([(buffer as HTMLTextAreaElement).value]);
-			(a as HTMLAnchorElement).href = URL.createObjectURL(file);
-			(a as HTMLAnchorElement).download = info;
-		}
-	}
-
 	return (<>
 		<nav>
-			<input className="file" type="file" placeholder="File name: " autoFocus tabIndex={0} onSubmit={onSubmitInput} onChange={onChangeInput}></input>
+			<input className="file" accept="text/*" type="file" placeholder="File name: " autoFocus tabIndex={0} onSubmit={onSubmitInput} onChange={onChangeInput}></input>
 			<div className="menulist">
-				<a onClick={saveFile}>Save</a>
 				<input type="checkbox" id="menu-btn"></input>
 				<label className="boton-menu" htmlFor="menu-btn">Menu</label>
 				<li onClick={clickX}>Exit</li>

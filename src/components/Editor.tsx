@@ -42,13 +42,13 @@ export function Editor() {
 
 	function onChangeTextcode(e: React.ChangeEvent){
 		// Insertions in .preview element
-		document.querySelector("#lang-hg").innerHTML = (e.target as HTMLTextAreaElement).value;
+		(document.querySelector("#lang-hg") as HTMLDivElement).innerHTML = (e.target as HTMLTextAreaElement).value;
 
-			switch (e.nativeEvent.inputType) {
+			switch ((e.nativeEvent as InputEvent).inputType) {
 				case "insertLineBreak":
-					setLastChar(e.target.value.at(-1))
-						setLineNumber(lineNumber + 1)
-						document.querySelector(".editor-numbers").value += `${lineNumber+1}\n`;
+					setLastChar((e.target as HTMLTextAreaElement).value.charAt(-1))
+					setLineNumber(lineNumber + 1);
+					(document.querySelector(".editor-numbers") as HTMLTextAreaElement).value += `${lineNumber+1}\n`;
 					break;
 				case "deleteContentBackward":
 					if(lastChar === "\n"){	
@@ -56,49 +56,49 @@ export function Editor() {
 						for(let i=1; i<lineNumber; i++){
 							result+=`${i}\n`;
 						}
-						document.querySelector(".editor-numbers").value = result;
-						setLastChar(e.target.value.at(-1))
+						(document.querySelector(".editor-numbers") as HTMLTextAreaElement).value = result;
+						setLastChar((e.target as HTMLTextAreaElement).value.charAt(-1))
 						setLineNumber(lineNumber - 1)
 					} else if (remain > 0){
 						let result = "";
 						for(let i=0; i<lineNumber-remain; i++){
 							result+=`${i+1}\n`;
 						}
-						document.querySelector(".editor-numbers").value = result;
+						(document.querySelector(".editor-numbers") as HTMLTextAreaElement).value = result;
 						setLineNumber(lineNumber - remain)
 						setRemain(0)
 					} else {
-						setLastChar(e.target.value.at(-1))
+						setLastChar((e.target as HTMLTextAreaElement).value.charAt(-1))
 					}
 					break;
 				case "insertText": 
-					setLastChar(e.target.value.at(-1))
+					setLastChar((e.target as HTMLTextAreaElement).value.charAt(-1))
 						break;
 				case "insertFromPaste": 
-					let text = e.nativeEvent.data;
+					let text = (e.nativeEvent as InputEvent).data;
 					let i = 1;
 					for (let letter of text) {
 						if (letter === '\n') {
-							document.querySelector(".editor-numbers").value += `${lineNumber + i}\n`;
+							(document.querySelector(".editor-numbers") as HTMLTextAreaElement).value += `${lineNumber + i}\n`;
 							i += 1;
 						}
 					}
 					setLastChar(e.nativeEvent.data.at(-1))
-						setLineNumber(i)
+					setLineNumber(i)
 						break;
 
 			}
 	}
 
-	function onScrollTextcode(e){
-		document.querySelector(".editor-numbers")?.scrollBy(0, 15)
+	function onScrollTextcode(){
+		document.querySelector(".editor-numbers")?.scrollBy(0, 32*devicePixelRatio)
 	}
 
 	function captureTextarea() {
 		
 		let code = document.querySelector("#lang-hg");
 
-		html2canvas(code).then(canvas => {
+		html2canvas(code).then((canvas: HTMLCanvasElement) => {
 			const image = canvas.toDataURL('image/png');
 
 			const link = document.createElement('a');
@@ -117,23 +117,24 @@ export function Editor() {
 	function exitDialog(e: MouseEvent){
 		console.log(e.target);
 		if (e.target === document.querySelector(".bot-info")){
-			e.target.close();
-			document.querySelector(".textcode").focus();
+			(e.target as HTMLDialogElement).close();
+			(document.querySelector(".textcode") as HTMLTextAreaElement).focus();
 		}
 		
 	}
 
-	function openPreview(e){
+	function openPreview(){
+		document.querySelector("#lang-hg").innerHTML = (document.querySelector(".textcode") as HTMLTextAreaElement).value;
 		hljs.highlightAll();
 		let preview = document.querySelector(".bot-info");
-		preview.showModal();
+		(preview as HTMLDialogElement).showModal();
 	}
 
 /* Up until now previous functions were to handle editor settings and functionality, now the part to interact with Telegram as a backend */
 
 // Logic to pass info from your mini app to your bot
-
-	function sendBackToBot(e){ 
+	const webapp = Telegram.WebApp;
+	function sendBackToBot(){ 
 		let textcode = document.querySelector(".textcode") as HTMLTextAreaElement;
 
 		if(textcode.value.length !== 0) {
@@ -164,10 +165,10 @@ export function Editor() {
 	}
 
 	function clearEditor(){
-		let textcode = document.querySelector(".textcode");
+		let textcode = document.querySelector(".textcode") as HTMLTextAreaElement;
 		textcode.value = "";
 		(document.querySelector("#lang-hg") as HTMLElement).innerHTML = "";
-		document.querySelector(".editor-numbers").value = `1\n`;
+		(document.querySelector(".editor-numbers") as HTMLTextAreaElement).value = `1\n`;
 		setLastChar("")
 		setLineNumber(1)
 		textcode.focus();
@@ -183,7 +184,7 @@ export function Editor() {
 		</div>
 
 		<div style={{width: "95vw", height: "10vh", display: "flex", flexFlow: "row", alignItems: "center", justifyContent: "space-between", gap: "0.4rem"}}>
-				<div style={{display: "flex", gap: "2px"}}>
+				<div style={{display: "flex", gap: "2rem"}}>
 					<div style={{userSelect: "none", padding: "0.2rem 0.5rem", boxShadow: "1px 1px 0 1.5px #333", backgroundColor: "#555", borderRadius: "0.2rem"}} onClick={insertTab}>TAB</div>
 					<div style={{userSelect: "none", padding: "0.2rem 0.5rem", boxShadow: "1px 1px 0 1.5px #333", backgroundColor: "#555", borderRadius: "0.2rem"}} onClick={clearEditor}>Clear</div>
 				</div>
@@ -196,7 +197,7 @@ export function Editor() {
 					<pre><code id="lang-hg" className="language-rust" ></code></pre>
 				</div>
 				<div style={{display: "flex", justifyContent: "space-around", flexDirection: "row"}}>
-					<button onClick={(e)=>{ e.target.parentNode.parentNode.close()}}>X</button>
+					<button onClick={()=>{ (document.querySelector(".bot-info") as HTMLDialogElement).close()}}>X</button>
 					<button onClick={captureTextarea}>Generate png</button>
 				</div>
 			</dialog>

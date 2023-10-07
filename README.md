@@ -1,8 +1,8 @@
-# CODEBOX - A simple code editor to share code inside Telegram
+# CODEBOX - A simple editor to share code inside Telegram
 
-I've made this guide to work with web apps in Telegram using React, Vite, Typescript, and Telegraf in the development of this mini app, all the code is free to use, the purpose is for new developers to join this ecosystem!
+I've made this guide for mini apps development in Telegram using React, Vite, Typescript, and Telegraf, all the code is free to use, the purpose is for new developers to join this ecosystem.
 
-My project is divided into a client with Telegram sdk(Software Development Kit) for Telegram functionality and the server bot using Telegraf, Nodejs, in every file there are explanations where I found it convinient. For the deveolpment of the client side I use vite + react, vite is popular a bundler for different web stacks, for this project I'm using react and typescript, but you could make it with vanillaJS or other web stacks.
+My project is divided into a client with Telegram sdk(Software Development Kit) for functionality inside Telegram and the server bot using Telegraf, Nodejs, in every file there are explanations where I found it convinient. For the deveolpment of the client side I use vite + react, vite is popular a bundler for different web stacks, for this project I'm using react and typescript, but you could make it with vanillaJS or other web stacks.
 
 Server side is made with nodejs and telegraf, node is perfect choice for those who already know Js since it's a runtime for the backend, and telegraf is a popular library for developing bots for Telegram bot api, all the stack tech I am using is free, I'll be leaving at the end all links.
 
@@ -42,12 +42,18 @@ It's a simple navigation bar to open files, save, and configure options(Menu) or
 ### Menu
 The configuration is made here, for setting up font size, color and programmign language
 
+
 ### Donation
 This component is an example of integration of Ton blockchain into your mini app, **DO NOT SEND ANY REAL TONCOIN**, the contract is deployed in the [testnet](https://testnet.tonscan.org/) blockchain of Ton, you can follow this [tutorial](https://ton-community.github.io/tutorials/01-wallet/) to understan and test the contract, also if you are interested in a [full contract tutorial](https://www.youtube.com/@AlefmanVladimirEN-xb4pq/videos) check this made by Alefman Vladimir
 
 All of the files have a description to follow the code and understand the flow of the project, once you have familiarity with the code you may want to start a new project yourself.
 
-Server is just one file, app.js and one .env file with you bot token, be sure to have installed the telegraf package with $`npm list`, to run the server input this command $`npm run bot`, for this project the main focus is on the client side so the logic in backend is pretty simple, it consist on one command **/editor** to be run in private chats, and a query for inline mode **editor**
+Server is just one file, app.js and one .env file with you bot token, be sure to have installed the telegraf package with $`npm list`, to run the server input this command $`npm run bot`, for this project the main focus is on the client side so the logic in backend is pretty simple, it consist on one command **/editor** to be run in private chats, and a query for inline mode, blank space.
+
+## Bugs and errors
+There is a bug in downloading images, seems web view does not support this feature, I've tried alternative ways to deliver this functionality but none convinced me, if you know how let me know with a PR to this repo.
+
+There is also other errors related to line numbers with pasting text in mobile, and with loading a file, I'll try to fix those later.
 
 # Guide on making new project
 
@@ -57,7 +63,15 @@ Vite is a great choice for starting a new project it facilitates the templating 
 
 You'll find important to save you project with a vsc(Version Control System) to be certain you have a backup once the project is large enough, for this we'll be using git, so input the command $`git init`, this initialize a local git repository for you to have control over what changes you made.
 
+## Make the logic and components of your application
 
+This part is where you'll finally start making you app, and see live changes with $`npm run dev -- --host` (--host argument is to open it in mobile), remember Telegram has a first mobile approach, so you should start with it.
+
+It's a good practice to save all your changes with a $`git commit` and $`git push` to a remote repository (github) for this to be persistent.
+
+## Compile and ship
+
+After you are done with you mini app just transpile it and bundle with $`npm run build`, this will put all your porject in the dist folder, and you can upload to any CDN, I'm chosing [netlify](https://www.netlify.com/), go test your mini app in a real mini app, first go to @botfather to make a new bot if you haven't one, the make a new webb app and send the url to your mini app, later open it with deep link or with your own bot, start using and testing all functionalities.
 
 ## Stack links
 
@@ -67,3 +81,4 @@ You'll find important to save you project with a vsc(Version Control System) to 
 - [Telegraf](https://telegrafjs.org/)
 - [NodeJs](https://nodejs.org/)
 - [Git](https://git-scm.com/)
+- [Netlify](https://www.netlify.com/)

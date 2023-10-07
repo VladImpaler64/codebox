@@ -1,9 +1,9 @@
 import { useState } from "react";	
 
 export function Menu(){
-	const [config, setConfig] = useState({color: "#888888", font_size: "2", lang: "language-rust"});
+	const [config, setConfig] = useState({color: "#888888", font_size: "3", lang: "language-rust"});
 
-//Event Handlers
+	//Event Handlers
 	function onClickContainer(){
 		(document.querySelector("#menu-btn") as HTMLInputElement).checked = false;
 	}
@@ -12,15 +12,14 @@ export function Menu(){
 		let lang = (e.target as HTMLInputElement).value
 		document.querySelector("#lang-hg")?.setAttribute("class", `${lang}`)
 		setConfig({color: config.color, font_size: config.font_size, lang: lang})
-		Telegram.WebApp.CloudStorage.setItem("config", JSON.stringify(config))
 	}
 
 	function onFontColor(e: React.ChangeEvent){
 		let color = (e.target as HTMLInputElement).value;
+
 		setConfig({color: color, font_size: config.font_size, lang: config.lang});
 		document.querySelector(".textcode")?.setAttribute("style", `color: ${color}; font-size: ${Number(config.font_size) / 2}rem;`);
 		document.querySelector(".editor-numbers")?.setAttribute("style", `color: ${color}; font-size: ${Number(config.font_size) / 2}rem;`);
-		Telegram.WebApp.CloudStorage.setItem("config", JSON.stringify(config))
 	}
 
 	function onFontSize(e: React.ChangeEvent){
@@ -32,22 +31,16 @@ export function Menu(){
 			document.querySelector(".textcode")?.setAttribute("style", `color: ${config.color}; font-size: ${size / 2}rem`);
 			document.querySelector(".editor-numbers")?.setAttribute("style", `color: ${config.color}; font-size: ${size / 2}rem`);
 		}
-
-		try { // If there is not a connected Telegram user this call will fail
-			Telegram.WebApp.CloudStorage.setItem("config", JSON.stringify(config))
-		} catch (err) {
-			;
-		}
 	}
 
 	return (<>
 		<div className="menu">
 			<label htmlFor="input-font_color">Font Color</label>
-			<input id="input-font_color" type="color" onChange={onFontColor}></input>
+			<input id="input-font_color" type="color" defaultValue={config.color} onChange={onFontColor}></input>
 			<label htmlFor="input-font_size">Font Size</label>
-			<input id="input-font_size" type="range" max={5} min={1} defaultValue={2} onChange={onFontSize}></input>
+			<input id="input-font_size" type="range" max={5} min={1} defaultValue={config.font_size} onChange={onFontSize}></input>
 			<p>Programming language</p>
-			<select name="languages" id="langs" onChange={onLangSelection}>
+			<select name="languages" id="langs" defaultValue={config.lang} onChange={onLangSelection}>
 				<option value="" disabled>Select a lang</option>
 				<option value="language-rust">Rust</option>
 				<option value="language-javascript">Javascript</option>
@@ -58,7 +51,7 @@ export function Menu(){
 				<option value="language-csharp">C# (Windows Java)</option>
 				<option value="language-sql">SQL</option>
 			</select>
-			<div className="github">Visit my github to review the code, get inspired and make a mini app yourself!<br /><a href="https://github.com/vladimpaler64" style={{borderRadius: "1rem"}}>https://github.com/vladimpaler64</a></div>
+			<div className="github">Visit my github to review the code, get inspired and make a mini app yourself!<br /><a href="https://github.com/VladImpaler64/tg-contest" style={{borderRadius: "1rem"}}>https://github.com/VladImpaler64/tg-contest</a></div>
 		</div>	
 		<div className="menu-container" onClick={onClickContainer}></div>
 	</>);

@@ -3,7 +3,7 @@ import "@stdlib/deploy";
 	Donation contract for mini app proyect, this is a simple way to get sponsored inside Telegram with toncoin
 */
 
-message SendToncoin {
+message SendToncoin { // A single type for payments and withdraw
 	amount: Int as coins;
 	address: Address;
 	payment: Bool;
@@ -13,7 +13,7 @@ message SendToncoin {
 contract Donation with Deployable {
 		
 	owner: Address; // The owner will have capabilities to withdraw toncoin sent to the contract
-	balance: Int as coins; // Every bit in ton blockchain balances, Int is 257 bit integer 
+	balance: Int as coins; // Every bit in ton blockchain counts, Int is 257 bit integer 
 
     init(owner: Address) { // This will get executed only once, we need to make unique data and code contract for this to get deployed
         self.owner = owner;
@@ -24,7 +24,7 @@ contract Donation with Deployable {
 		self.balance = self.balance + context().value;
 	}
 
-	receive(msg: SendToncoin){
+	receive(msg: SendToncoin){ // Send to owner or to an specified address as payment
 		let ctx: Context = context();
 		require(ctx.sender == self.owner, "Invalid sender");
 
@@ -61,7 +61,7 @@ contract Donation with Deployable {
 		}
 	}
 
-	get fun balance(): String { // To let others know how much toncoin is held in the contract
+	get fun balance(): String { // To let others know how much toncoin has been donated to the contract
 		return self.balance.toCoinsString();
 	}
 }
