@@ -42,7 +42,6 @@ It's a simple navigation bar to open files, save, and configure options(Menu) or
 ### Menu
 The configuration is made here, for setting up font size, color and programmign language
 
-
 ### Donation
 This component is an example of integration of Ton blockchain into your mini app, **DO NOT SEND ANY REAL TONCOIN**, the contract is deployed in the [testnet](https://testnet.tonscan.org/) blockchain of Ton, you can follow this [tutorial](https://ton-community.github.io/tutorials/01-wallet/) to understan and test the contract, also if you are interested in a [full contract tutorial](https://www.youtube.com/@AlefmanVladimirEN-xb4pq/videos) check this made by Alefman Vladimir
 
@@ -50,8 +49,13 @@ All of the files have a description to follow the code and understand the flow o
 
 Server is just one file, app.js and one .env file with you bot token, be sure to have installed the telegraf package with $`npm list`, to run the server input this command $`npm run bot`, for this project the main focus is on the client side so the logic in backend is pretty simple, it consist on one command **/editor** to be run in private chats, and a query for inline mode, blank space.
 
+### Commands for the bot
+- editor - This will show a keyboard button to open the mini app
+- parse - This command is used to parse the passed argument to a photo with captions
+- inline mode - Writtin `@codebox_robot` will open a inline result with the option to open the mini app when query is empty or parse the passed query into a photo, you should not do this by hand, only with the data sent back from the mini app
+
 ## Bugs and errors
-There is a bug in downloading images, seems web view does not support this feature, I've tried alternative ways to deliver this functionality but none convinced me, if you know how let me know with a PR to this repo.
+There is a bug in downloading images, seems web view does not support this feature, I've implemented an alternative way to deliver this functionality with inline query method.
 
 There is also other errors related to line numbers with pasting text in mobile, and with loading a file, I'll try to fix those later.
 

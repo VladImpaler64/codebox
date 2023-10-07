@@ -115,7 +115,6 @@ export function Editor() {
 	}
 
 	function exitDialog(e: MouseEvent){
-		console.log(e.target);
 		if (e.target === document.querySelector(".bot-info")){
 			(e.target as HTMLDialogElement).close();
 			(document.querySelector(".textcode") as HTMLTextAreaElement).focus();
@@ -189,8 +188,8 @@ export function Editor() {
 					<div style={{userSelect: "none", padding: "0.2rem 0.5rem", boxShadow: "1px 1px 0 1.5px #333", backgroundColor: "#555", borderRadius: "0.2rem"}} onClick={clearEditor}>Clear</div>
 				</div>
 				<div style={{display: "flex", gap: "2px"}}>
-					<button onClick={openPreview}>Highlight Preview</button>
-					<button onClick={sendBackToBot}>Parse HTML</button>
+					<button onClick={openPreview}>Preview</button>
+					<button onClick={sendBackToBot}>Parse Telegram</button>
 				</div>
 			<dialog onClick={exitDialog} className="bot-info">
 				<div className="preview">
