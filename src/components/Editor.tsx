@@ -75,7 +75,7 @@ export function Editor() {
 					setLastChar((e.target as HTMLTextAreaElement).value.charAt(-1))
 						break;
 				case "insertFromPaste": 
-					let text = (e.nativeEvent as InputEvent).data;
+					let text = (e.nativeEvent as InputEvent).data || "";
 					let i = 1;
 					for (let letter of text) {
 						if (letter === '\n') {
@@ -83,7 +83,7 @@ export function Editor() {
 							i += 1;
 						}
 					}
-					setLastChar(e.nativeEvent.data.at(-1))
+					setLastChar((e.nativeEvent as InputEvent).data?.charAt(-1) || lastChar)
 					setLineNumber(i)
 						break;
 
@@ -123,7 +123,7 @@ export function Editor() {
 	}
 
 	function openPreview(){
-		document.querySelector("#lang-hg").innerHTML = (document.querySelector(".textcode") as HTMLTextAreaElement).value;
+		(document.querySelector("#lang-hg") as HTMLDivElement).innerHTML = (document.querySelector(".textcode") as HTMLTextAreaElement).value;
 		hljs.highlightAll();
 		let preview = document.querySelector(".bot-info");
 		(preview as HTMLDialogElement).showModal();
@@ -189,7 +189,7 @@ export function Editor() {
 				</div>
 				<div style={{display: "flex", gap: "2px"}}>
 					<button onClick={openPreview}>Preview</button>
-					<button onClick={sendBackToBot}>Parse Telegram</button>
+					<button onClick={sendBackToBot}>Share code!</button>
 				</div>
 			<dialog onClick={exitDialog} className="bot-info">
 				<div className="preview">

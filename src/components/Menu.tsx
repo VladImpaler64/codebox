@@ -51,7 +51,7 @@ export function Menu(){
 				<option value="language-csharp">C# (Windows Java)</option>
 				<option value="language-sql">SQL</option>
 			</select>
-			<div className="github">Visit my github to review the code, get inspired and make a mini app yourself!<br /><a href="https://github.com/VladImpaler64/tg-contest" style={{borderRadius: "1rem"}}>https://github.com/VladImpaler64/tg-contest</a></div>
+			<div className="github">Visit my github to review the code, get inspired and make a mini app yourself!<br /><a href="https://github.com/VladImpaler64/tg-contest" style={{borderRadius: "1rem"}}>github.com/VladImpaler64/</a><br />Special thanks to <br /><a href="https://github.com/SalamandraDevs">Salamandra devs</a><br />for hosting the bot</div>
 		</div>	
 		<div className="menu-container" onClick={onClickContainer}></div>
 	</>);

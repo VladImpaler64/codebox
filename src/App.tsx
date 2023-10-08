@@ -5,8 +5,7 @@ import { Menu } from "./components/Menu.tsx"
 import { Donation } from "./components/Donation.tsx"
 import { useTonConnect } from './hooks/useTonConnect.ts'
 
-function App() { // We'll be rendering a two components
-
+function App() { // We'll be rendering a three components
 
   return (
     <>

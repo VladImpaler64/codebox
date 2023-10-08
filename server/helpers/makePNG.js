@@ -14,9 +14,9 @@ html {
   padding: 0.5rem;
   box-sizing: border-box;
   display: contents;
-  width: ${width * 16 + 64}px;
+  width: ${(width * 16 + 64) > 1080 ? 1080 : (width * 16 + 64)}px;
   height: 0;
-  background-color: #282c34;
+  background-color: #282c11;
 }
 
 .hljs {
@@ -124,7 +124,7 @@ html {
     html: html
   })
     .then(async (img) => {
-      // Image is generated and sent to TG
+      // Image is generated and sent to user private chat in Telegram
       if (bot){
         const photo_id = await bot.sendPhoto(ctx.update.inline_query.from.id, { source: img }, {caption: code.length > 1000 ? "Thansk for using code box!" : `<pre><code>${code}</code></pre>`, parse_mode: "HTML"});
 

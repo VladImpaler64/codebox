@@ -14,7 +14,7 @@ export function Nav(){
 		let reader = new FileReader();
 		reader.onload = ()=>{
 			(buffer as HTMLTextAreaElement).value = reader.result as string;
-			// Insert number of lines
+			// Insert number of lines when reading a file
 			let i = 1, total = "";
 			for (let letter of reader.result as string) {
 				if (letter === '\n') {
@@ -23,20 +23,18 @@ export function Nav(){
 				}
 			}
 
-			document.querySelector(".editor-numbers").value = total;
+			(document.querySelector(".editor-numbers") as HTMLTextAreaElement).value = total;
 		}
 		reader.readAsText(f[0])
 	}
 
 // Functionality with Telegram
 	const webapp = window.Telegram.WebApp;
-	// const user_info = Telegram.Utils.urlParseQueryString(Telegram.WebApp.initData);
 
 	function clickX(){
-		// let username = Telegram.Utils.urlParseQueryString(user_info.user)
 		let data = (document.querySelector(".textcode") as HTMLTextAreaElement).value;
 		if (data.length > 0 && data.length <= 4096){
-			webapp.CloudStorage.setItem("buffer_data", data, (err, stored)=>{
+			webapp.CloudStorage.setItem("buffer_data", data, (err, stored)=>{ // Store last input data in cloudstorage, loaded on mini app init
 				console.log(err, stored)
 			});
 		}
@@ -48,7 +46,7 @@ export function Nav(){
 			let lang = (document.querySelector("#langs") as HTMLInputElement).value;
 
 			let data = JSON.stringify({color: color, font_size: font, lang: lang});
-			webapp.CloudStorage.setItem("config", data, (err, stored)=>{
+			webapp.CloudStorage.setItem("config", data, (err, stored)=>{ // Store config data to load on mini app init
 				console.log(err, stored)
 			});
 		} catch (err) {

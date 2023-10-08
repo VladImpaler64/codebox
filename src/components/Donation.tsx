@@ -4,11 +4,11 @@ import { useDonationContract } from "../hooks/useDonationContract";
 
 export function Donation(){
 	const {network, connected} = useTonConnect();
-	const {donationAddress, balance, sendTon} = useDonationContract();
+	const {donationAddress, balance, sendTon} = useDonationContract(); // Init the contract when we render this component
 
-	function sendDonation(){ // Interaction with the toncoin throught useTonConnect, orbs provider
+	// Event handlers
+	function sendDonation(){ // Send donation to contract
 	 	let toncoin = document.querySelector("#toncoin") as HTMLInputElement;
-		console.log(`sent ${toncoin.value}`)
 		sendTon(toncoin.value as string);
 	}
 
