@@ -1,7 +1,7 @@
 import hljs from "highlight.js";
 import Html2Image from "node-html-to-image";
 
-export async function makePNG(ctx, code, width, bot = null, article_id = 0){
+export async function makePNG(ctx, code, size, bot = null, article_id = 0){
   
   const highlightedCode = hljs.highlightAuto(code).value;
 
@@ -14,15 +14,19 @@ html {
   padding: 0.5rem;
   box-sizing: border-box;
   display: contents;
-  width: ${(width * 16 + 64) > 1080 ? 1080 : (width * 16 + 64)}px;
-  height: 0;
+  width: ${size.cols * 16 > 1280 ? 1280 : size.cols * 16}px !important;
+  height: ${size.rows * 16 > 800 ? 800 : size.rows * 16}px !important;
   background-color: #282c11;
 }
 
 .hljs {
   display: block !important;
-  font-size: 1rem;
-  padding: .5em !important;
+  font-size: 1rem !important;
+  max-width: 1280px !important;
+  max-height: 800px !important;
+  overflow-wrap: break-word !important;
+  white-space: break-spaces !important;
+  padding: 0.5em !important;
   color: #abb2bf !important;
   background: #282c34 !important;
 }
@@ -97,18 +101,18 @@ html {
 }
 
 #lang-hg {
-  tab-size: 4ch;
-  overflow-wrap: break-word;
+  tab-size: 4ch !important;
+  overflow-wrap: break-word !important;
 }
 
 #lang-hg span {
-  white-space: break-spaces;
+  white-space: break-spaces !important;
+  overflow-wrap: break-word !important;
 }
 
 #lang-hg span.hljs-comment {
-  display: inline-block;
-  max-width: 90vw;
-  white-space: normal;
+  display: inline-block !important;
+  white-space: normal !important;
 }
 
 </style>
@@ -138,16 +142,18 @@ html {
 }
 
 export function size(text){
-    let maxCols = 0; let count = 0;
+    let maxCols = 0; let count = 0; let rows = 0;
     for (const char of text){
       if (char === '\n'){
         maxCols = maxCols > count ? maxCols : count;
         count = 0;
-        break;
+	rows += 1;
+        continue;
       } 
       count += 1;
     }
 
-
-    return maxCols === 0 ? text.length : maxCols;
+    let result = maxCols === 0 ? {cols: text.length, rows: rows} : {cols: maxCols, rows: rows}; 
+    console.log(result);
+    return result;
 }

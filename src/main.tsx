@@ -20,7 +20,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     window.Telegram.WebApp.CloudStorage.getItem("buffer_data", (err, value)=>{
         if (err === null){
-          (document.querySelector(".textcode") as HTMLTextAreaElement).value = value || "// To enable proper highlight go to menu and change the language, also font size and color. Enjoy!";
+          (document.querySelector(".textcode") as HTMLTextAreaElement).value = value || "// To enable proper highlight go to menu and change the language, also font size and color. (max cols 80, max rows 35\n// Enjoy!";
+          let count = 0, lines = "";
+          for (const char of value){
+            if (char === '\n'){
+              count += 1;
+              lines += `${count}\n`
+            }
+          }
+          (document.querySelector(".editor-numbers") as HTMLTextAreaElement).value = lines;
         }
       });
   } catch (err) {

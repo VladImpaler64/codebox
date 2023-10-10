@@ -136,7 +136,14 @@ export function Editor() {
 	function sendBackToBot(){ 
 		let textcode = document.querySelector(".textcode") as HTMLTextAreaElement;
 
-		if(textcode.value.length !== 0) {
+		  let count = 0;
+		  for (const char of textcode.value){
+			if (char === '\n'){
+			  count += 1;
+			}
+		  }
+
+		if(textcode.value.length !== 0 && count <= 50 && textcode.value.length < 4096) {
 			// If it is not supported we skip the error
 			try {
 				webapp.CloudStorage.setItem("buffer_data", textcode.value, (err, stored)=>{
@@ -146,7 +153,11 @@ export function Editor() {
 				;
 			}
 
-			window.Telegram.WebApp.switchInlineQuery(textcode.value); // This method is used to send back any data, up to 4096 bytes to your but, this way you may have a "backend" to interact with users in the app after they used your min app
+			window.Telegram.WebApp.switchInlineQuery(textcode.value); // This method is used to send back any data, up to 4096 bytes, this way you may have a "backend" to interact with users in the app after they used your min app
+		} else {
+			window.Telegram.WebApp.showAlert("Sorry, limit is between 1 and 50 lines, and 4096 bytes", ()=>{
+				;
+			});
 		}
 
 	}

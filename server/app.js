@@ -7,7 +7,7 @@ import { makePNG, size } from "./helpers/makePNG.js";
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
-bot.start((ctx) => ctx.reply('supported commands: \n/editor\n/parse ...code')) // "editor" command sends a keyboard button with mini app link, "parse" command parses input text into a png and monospace code
+bot.start((ctx) => ctx.reply('supported commands: \n/editor\n/parse ...code\n/cancel')) // "editor" command sends a keyboard button with mini app link, "parse" command parses input text into a png and monospace code
 
 bot.on(message("web_app_data"), async (ctx)=>{ // Call to Telegram.WebApp.sendData function (client side) is received in an update with web_app_data field
 
@@ -34,6 +34,10 @@ bot.command('parse', async (ctx) => {
   } else {
     await bot.telegram.sendMessage(ctx.chat.id, "Sorry, can't use this command in a group, try querying the bot, inline-mode, \n`@codebox_bot `", {reply_markup: {remove_keyboard: true}})
   }
+});
+
+bot.command("cancel", async (ctx)=>{
+    await bot.telegram.sendMessage(ctx.chat.id, "Cleaning...", {reply_markup: {remove_keyboard: true}});
 });
 
 // We show the user the default mini app when query is empty

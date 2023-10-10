@@ -29,7 +29,6 @@
   resize: none;
   outline: none;
   height: 50vh;
-  touch-action: none;
 }
 
 .editor-numbers {
