@@ -11,7 +11,17 @@ bot.start((ctx) => ctx.reply('supported commands: \n/editor\n/parse ...code\n/ca
 
 bot.on(message("web_app_data"), async (ctx)=>{ // Call to Telegram.WebApp.sendData function (client side) is received in an update with web_app_data field
 
-  await ctx.telegram.sendMessage(ctx.chat.id, `<pre><code>${ctx.message.web_app_data.data}</pre></code>`, {parse_mode: "HTML", reply_markup: {remove_keyboard: true}}); // This will send the code made with the client editor in the format of html to the user private chat
+  // Work with the query input back from mini app (Telegram.WebApp.switchInlineQuery method), this may cause conflict when user manually inputs data
+    let text = ctx.message.web_app_data.data;
+    article_id += 1;
+
+    // Logic to parse into a png
+
+    try { // Inline queries may fail if user inputs manually the code text, this prevents bot panicking
+      await makePNG(ctx, text, size(text), bot.telegram, article_id);
+    } catch (err) {
+      console.error(err) // Ignore the error since is unpredictable
+    }
 
 });
 

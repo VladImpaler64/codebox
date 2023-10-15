@@ -143,7 +143,7 @@ export function Editor() {
 			}
 		  }
 
-		if(textcode.value.length !== 0 && count <= 50 && textcode.value.length < 4096) {
+		if(textcode.value.length !== 0 && count < 7) {
 			// If it is not supported we skip the error
 			try {
 				webapp.CloudStorage.setItem("buffer_data", textcode.value, (err, stored)=>{
@@ -153,11 +153,22 @@ export function Editor() {
 				;
 			}
 
-			window.Telegram.WebApp.switchInlineQuery(textcode.value); // This method is used to send back any data, up to 4096 bytes, this way you may have a "backend" to interact with users in the app after they used your min app
-		} else {
-			window.Telegram.WebApp.showAlert("Sorry, limit is between 1 and 50 lines, and 4096 bytes", ()=>{
+			window.Telegram.WebApp.switchInlineQuery(textcode.value);
+		} else if (textcode.value.length <= 4096) {
+			try {
+				webapp.CloudStorage.setItem("buffer_data", textcode.value, (err, stored)=>{
+					console.log(err, stored)
+				});
+			} catch (err) {
 				;
+			}
+
+
+			window.Telegram.WebApp.showAlert("Check bot's chat.\n\tThanks for using CODEBOX!", ()=>{
+				window.Telegram.WebApp.sendData(textcode.value); // This method is used to send back any data, up to 4096 bytes, this way you may have a "backend" to interact with users in the app after they used your min app
 			});
+		} else {
+			window.Telegram.WebApp.showAlert("Sorry, can't send more than 4096 bytes.");
 		}
 
 	}
