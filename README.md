@@ -1,4 +1,5 @@
 # CODEBOX - A simple editor to share code inside Telegram
+![Captura desde 2023-10-29 10-27-50](https://github.com/VladImpaler64/codebox/assets/115114507/294312c9-b6f6-4119-8faa-8c604b55efee)
 
 I've made this guide for mini apps development in Telegram using React, Vite, Typescript, and Telegraf, all the code is free to use, the purpose is for new developers to join this ecosystem.
 
