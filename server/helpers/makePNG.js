@@ -4,9 +4,8 @@ import Html2Image from "node-html-to-image";
 export async function makePNG(ctx, code, size, bot = null, article_id = 0){
   
   const highlightedCode = hljs.highlightAuto(code, ["rust", "javascript", "cpp", "c", "python", "go", "java", "sql", "html", "css"]).value;
-  let width = size.cols * 24 > 720 ? 720 : size.cols * 24;
+  let width = size.cols * 24 > 512 ? 512 : size.cols * 24;
   let height = size.rows * 24 > 1200 ? 1200 : size.rows * 24;
-  console.log(highlightedCode, width, height);
 
   const html = `
 <html>

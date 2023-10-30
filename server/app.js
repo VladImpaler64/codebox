@@ -7,7 +7,11 @@ import { makePNG, size } from "./helpers/makePNG.js";
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
-bot.start((ctx) => ctx.reply('supported commands: \n/editor\n/parse ...code\n/cancel')) // "editor" command sends a keyboard button with mini app link, "parse" command parses input text into a png and monospace code
+bot.start((ctx) => {
+
+  console.log("New User: ", ctx.from.id, ctx.from.first_name);
+  ctx.reply('supported commands: \n/editor\n/parse ...code\n/cancel'); // "editor" command sends a keyboard button with mini app link, "parse" command parses input text into a png and monospace code
+})
 
 bot.on(message("web_app_data"), async (ctx)=>{ // Call to Telegram.WebApp.sendData function (client side) is received in an update with web_app_data field
 
@@ -66,6 +70,7 @@ bot.on("inline_query", async (ctx)=>{
     // Logic to parse into a png
 
     try { // Inline queries may fail if user inputs manually the code text, this prevents bot panicking
+      console.log("User: ", ctx.update.inline_query.from.id, ctx.update.inline_query.from.first_name, ctx.update.inline_query.chat_type) 
       await makePNG(ctx, text, size(text), bot.telegram, article_id);
     } catch (err) {
       console.error(err) // Ignore the error since is unpredictable
